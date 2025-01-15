@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Final_Project.Models;
 
-namespace Final_Project.Areas.Identity.Pages.Account
+namespace Final_Project.Data
 {
     public class LoginModel : PageModel
     {
