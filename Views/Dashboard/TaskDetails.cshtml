@@ -3,24 +3,23 @@
 @{
 	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 	var Users = ViewBag.Users;
-	 // IQueryable<TaskModel> Task = ViewBag.Task;
 }
 
 <div class="container">
-	<div class="row">
+	<div class="row flex-column align-content-center">
 		<div class="col-8">
 			<div class="card">
-				<div class="card-header text-center">New Task</div>
+				<div class="card-header text-center">Task</div>
 				<div class="card-body">
-					<form asp-action="CreateTask" method="post">
+					<form asp-action="EditTask" asp-route-id="@Model.Id">
 						<div class="row align-items-end">
 							<div class="col">
 								<label class="form-label">Title</label>
-								<input type="text" asp-for="@Model.Title" class="form-control" />
+								<input type="text" asp-for="@Model.Title" class="form-control input" disabled />
 							</div>
 							<div class="col">
 								<label class="from-label">Assign to</label>
-								<select asp-for="@Model.UserId" class="form-select">
+								<select asp-for="@Model.UserId" class="form-select input" disabled>
 									@foreach (var u in Users)
 									{
 										<option value=@u.Id>@u.DisplayName</option>
@@ -31,33 +30,33 @@
 						<div class="row">
 							<div class="col">
 								<label class="form-label">Description</label>
-								<textarea class="form-control" asp-for="@Model.Description"></textarea>
+								<textarea class="form-control input" disabled asp-for="@Model.Description"></textarea>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col">
 								<label class="form-label">Due Date</label>
-								<input type="date" asp-for="@Model.DueDate" class="form-control" />
+								<input type="date" asp-for="@Model.DueDate" class="form-control input" disabled />
 							</div>
 							<div class="col">
 								<label class="form-label">Due Time</label>
-								<input type="time" asp-for="@Model.DueTime" class="form-control" />
+								<input type="time" asp-for="@Model.DueTime" class="form-control input" disabled />
 							</div>
 						</div>
 						<div class="row py-2">
 							<div class="col d-flex justify-content-center">
 								<label>Is Completed</label>
-								<input type="checkbox" asp-for="@Model.IsCompleted" class="form-check-sm mx-3" />
+								<input type="checkbox" asp-for="@Model.IsCompleted" class="form-check-sm mx-3 input" disabled />
 							</div>
 							<div class="col d-flex justify-content-center">
-								<label>Mark as Important?</label>
-								<input type="checkbox" asp-for="@Model.IsImportant" class="form-check-sm mx-3" />
+								<label>Is Important</label>
+								<input type="checkbox" asp-for="@Model.IsImportant" class="form-check-sm mx-3 input" disabled />
 							</div>
 						</div>
 						<div class="row mt-3">
-							<div class="col d-flex justify-content-center">
+							<div class="col d-flex justify-content-center gap-3" id="edit-task-buttons">
 								<button class="btn btn-primary" type="submit">Edit</button>
-								<button class="btn btn-danger" type="submit">Delete</button>
+								<button class="btn btn-danger" type="button" onclick="$('#del_modal').toggle();">Delete</button>
 							</div>
 						</div>
 					</form>
@@ -66,19 +65,20 @@
 		</div>
 	</div>
 </div>
+
 <div class="modal" tabindex="-1" id="del_modal">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Delete confirmation</h5>
-				<button type="button" class="btn-close" onclick="closeModal()"></button>
+				<button type="button" class="btn-close" onclick="$('#del_modal').toggle();"></button>
 			</div>
 			<div class="modal-body">
 				<p>Are you sure you want to delete?</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-				<button type="button" class="btn btn-danger" onclick="deleteCatagory()">Delete</button>
+				<button type="button" class="btn btn-secondary" onclick="$('#del_modal').toggle();">Cancel</button>
+				<button type="button" class="btn btn-danger" onclick="deleteTask(@Model.Id)">Delete</button>
 			</div>
 		</div>
 	</div>

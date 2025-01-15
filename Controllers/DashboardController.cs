@@ -52,7 +52,7 @@ namespace Final_Project.Controllers
     public IActionResult TaskDetails(int Id)
     {
       var task = _DbContext.Task.Where(t => t.Id == Id).Single();
-      var joined = _DbContext.Users.Join(
+      var users = _DbContext.Users.Join(
         _DbContext.Task,
           u => u.Id,
           t => t.UserId,
@@ -62,8 +62,44 @@ namespace Final_Project.Controllers
             DisplayName = u.DisplayName,
           }
         );
-      ViewBag.Users = joined;
+      ViewBag.Users = users;
       return View(task);
+    }
+
+    public IActionResult EditTask(int Id)
+    {
+      var users = _DbContext.Users.Join(
+        _DbContext.Task,
+          u => u.Id,
+          t => t.UserId,
+          (u, t) => new
+          {
+            Id = u.Id,
+            DisplayName = u.DisplayName,
+          }
+        );
+      ViewBag.Users = users;
+      var task = _DbContext.Task.SingleOrDefault(t => t.Id == Id);
+      return View(task);
+    }
+
+    //[HttpPost]
+    public IActionResult UpdateTask(TaskModel task)
+    {
+      _DbContext.Task.Update(task);
+      _DbContext.SaveChanges();
+      return RedirectToAction("TaskDetails", new {Id=task.Id});
+    }
+
+    public IActionResult DeleteTask(int Id)
+    {
+      var task = _DbContext.Task.SingleOrDefault(t => t.Id == Id);
+      if (task != null)
+      {
+        _DbContext.Task.Remove(task);
+        _DbContext.SaveChanges();
+      }
+      return RedirectToAction("Tasks");
     }
 
     public IActionResult Users()
