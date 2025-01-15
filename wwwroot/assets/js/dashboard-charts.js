@@ -1,6 +1,9 @@
 var trafficchart = document.getElementById("trafficflow");
 var saleschart = document.getElementById("sales");
 
+$("#trafficflow").remove();
+$(".canvas-wrapper").append('<canvas class="chart" id="trafficflow"></canvas>');
+
 // new
 var myChart1 = new Chart(trafficchart, {
 type: 'line',
@@ -32,6 +35,9 @@ options: {
     },
 }
 });
+
+$("#sales").remove();
+$(".canvas-wrapper").append('<canvas class="chart" id="sales"></canvas>');
 
 // new
 var myChart2 = new Chart(saleschart, {

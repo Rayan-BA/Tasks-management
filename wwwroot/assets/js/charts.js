@@ -5,8 +5,11 @@ var chart4 = document.getElementById("doughnutchart");
 var chart5 = document.getElementById("stackedbarchart");
 var chart6 = document.getElementById("radarchart");
 
+$("#linechart").remove();
+$(".canvas-wrapper").append('<canvas class="chart" id="linechart" style="display: block; box-sizing: border-box; height: 602px; width: 602px;" width="602" height="602"></canvas>');
+
 // new
-/*var myChart1 = new Chart(chart1, {
+var myChart1 = new Chart(chart1, {
 type: 'line',
 data: {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -35,10 +38,13 @@ options: {
         },
     },
 }
-});*/
+});
+
+$("#barchart").remove();
+$(".canvas-wrapper").append('<canvas class="chart" id="barchart" style="display: block; box-sizing: border-box; height: 602px; width: 602px;" width="602" height="602"></canvas>');
 
 // new
-/*var myChart2 = new Chart(chart2, {
+var myChart2 = new Chart(chart2, {
 type: 'bar',
 data: {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -73,10 +79,13 @@ options: {
         },
     },
 }
-});*/
+});
+
+$("#piechart").remove();
+$(".canvas-wrapper").append('<canvas class="chart" id="piechart" style="display: block; box-sizing: border-box; height: 602px; width: 602px;" width="602" height="602"></canvas>');
 
 // new
-/*var myChart3 = new Chart(chart3, {
+var myChart3 = new Chart(chart3, {
 type: 'pie',
 data: {
     labels: ["Engineering", "Customer Support", "Operations", "Marketing", "R and D"],
@@ -103,10 +112,10 @@ options: {
         },
     },
 }
-});*/
+});
 
-//$("#doughnutchart").remove();
-//$(".canvas-wrapper").append('<canvas class="chart" id="doughnutchart" style="display: block; box-sizing: border-box; height: 602px; width: 602px;" width="602" height="602"></canvas>');
+$("#doughnutchart").remove();
+$(".canvas-wrapper").append('<canvas class="chart" id="doughnutchart" style="display: block; box-sizing: border-box; height: 602px; width: 602px;" width="602" height="602"></canvas>');
 
 // new
 var myChart4 = new Chart(chart4, {
@@ -138,8 +147,11 @@ options: {
 }
 });
 
+$("#stackedbarchart").remove();
+$(".canvas-wrapper").append('<canvas class="chart" id="stackedbarchart" style="display: block; box-sizing: border-box; height: 602px; width: 602px;" width="602" height="602"></canvas>');
+
 // new
-/*var myChart5 = new Chart(chart5, {
+var myChart5 = new Chart(chart5, {
 type: 'bar',
 data: {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -182,10 +194,13 @@ options: {
         },
     },
 }
-});*/
+});
+
+$("#radarchart").remove();
+$(".canvas-wrapper").append('<canvas class="chart" id="radarchart" style="display: block; box-sizing: border-box; height: 602px; width: 602px;" width="602" height="602"></canvas>');
 
 // new
-/*var myChart6 = new Chart(chart6, {
+var myChart6 = new Chart(chart6, {
 type: 'radar',
 data: {
     labels: ['Age 18-24', 'Age 25-31', 'Age 32-38', 'Age 39-45', 'Age 46-100+'],
@@ -212,4 +227,4 @@ options: {
         },
     },
 }
-});*/
+});
