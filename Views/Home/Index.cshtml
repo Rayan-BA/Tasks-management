@@ -1,5 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var DueToday = ViewBag.DueToday;
+    // var DueThisWeek    = ViewBag.DueThisWeek;
+    var TotalTasks = ViewBag.TotalTasks;
+    var ImportantTasks = ViewBag.ImportantTasks;
+    var Tasks = ViewBag.Tasks;
 }
 
 <div class="container">
@@ -16,7 +21,7 @@
                         <div class="col-sm-8">
                             <div class="detail">
                                 <p class="detail-subtitle">Tasks Due</p>
-                                <span class="number">6,267</span>
+                                <span class="number">@DueToday</span>
                             </div>
                         </div>
                     </div>
@@ -41,7 +46,7 @@
                         <div class="col-sm-8">
                             <div class="detail">
                                 <p class="detail-subtitle">Tasks Due</p>
-                                <span class="number">6,267</span>
+                                <span class="number">0000</span>
                             </div>
                         </div>
                     </div>
@@ -66,7 +71,7 @@
                         <div class="col-sm-8">
                             <div class="detail">
                                 <p class="detail-subtitle">Total Incomplete Tasks</p>
-                                <span class="number">6,267</span>
+                                <span class="number">@TotalTasks</span>
                             </div>
                         </div>
                     </div>
@@ -90,7 +95,7 @@
                         <div class="col-sm-8">
                             <div class="detail">
                                 <p class="detail-subtitle">Important Tasks</p>
-                                <span class="number">6,267</span>
+                                <span class="number">@ImportantTasks</span>
                             </div>
                         </div>
                     </div>
@@ -119,9 +124,12 @@
             <div class="card">
                 <div class="card-header">Most Recent Tasks</div>
                 <div class="card-body">
-                    <p class="card-title"></p>
-                    
-                    </div>
+                    <ul class="list-group">
+                      @foreach(var t in Tasks)
+                      {
+                        <li class="list-group-item">@t.Title</li>
+                      }
+                    </ul>
                 </div>
             </div>
         </div>

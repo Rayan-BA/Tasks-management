@@ -27,6 +27,11 @@ namespace Final_Project.Controllers
 
     public IActionResult Index()
     {
+      ViewBag.DueToday = _DbContext.Task.Where(t => t.DueDate.Equals(DateOnly.FromDateTime(DateTime.Today))).Count();
+      //ViewBag.DueThisWeek
+      ViewBag.TotalTasks = _DbContext.Task.Where(t => !t.IsCompleted).Count();
+      ViewBag.ImportantTasks = _DbContext.Task.Where(t => !t.IsCompleted && t.IsImportant).Count();
+      ViewBag.Tasks = _DbContext.Task.ToList();
       return View();
     }
 

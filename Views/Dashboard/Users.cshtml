@@ -1,5 +1,27 @@
-﻿@{
+﻿
+@{
 	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+	var Users = ViewBag.Users;
 }
 
-<p>Users</p>
+<div class="container">
+	<div class="row align-content-center">
+		<div class="col mt-3">
+			<div class="list-group">
+
+				@foreach (var u in Users)
+				{
+					<a asp-action="TaskDetails" asp-route-id="@u.Id" class="list-group-item list-group-item-action" aria-current="true">
+						<div class="d-flex w-100 justify-content-between">
+							<h5 class="mb-1">@u.DisplayName</h5>
+							<small>@u.NormalizedEmail</small>
+						</div>
+						<p class="mb-1">@u.Description</p>
+						<small>And some small print.</small>
+					</a>
+				}
+
+			</div>
+		</div>
+	</div>
+</div>
