@@ -1,0 +1,26 @@
+﻿
+@{
+	var Tasks = ViewBag.Tasks;
+}
+
+<div class="container">
+	<div class="row">
+		<div class="col mt-3">
+			<div class="list-group">
+
+				@foreach (var t in Tasks)
+				{
+					<a asp-action="TaskDetails" asp-route-id="@t.Id" class="list-group-item list-group-item-action" aria-current="true">
+						<div class="d-flex w-100 justify-content-between">
+							<h5 class="mb-1">@t.Title</h5>
+							<small>@t.CreatedAt</small>
+						</div>
+						<p class="mb-1">@t.Description</p>
+						<small>And some small print.</small>
+					</a>
+				}
+
+			</div>
+		</div>
+	</div>
+</div>

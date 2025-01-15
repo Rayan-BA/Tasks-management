@@ -1,0 +1,103 @@
+﻿@model TaskModel;
+
+@{
+	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+	var Tasks = ViewBag.Tasks;
+	var Users = ViewBag.Users;
+}
+
+<div class="container">
+	<div class="row flex-column align-content-center">
+		<div class="col-8">
+			<div class="card">
+				<div class="card-header text-center">New Task</div>
+				<div class="card-body">
+					<form asp-action="CreateTask" method="post">
+						<div class="row align-items-end">
+							<div class="col">
+								<label class="form-label">Title</label>
+								<input type="text" asp-for="@Model.Title" class="form-control" />
+							</div>
+							<div class="col">
+								<label class="from-label">Assign to</label>
+								<select asp-for="@Model.UserId" class="form-select">
+									@foreach (var u in Users)
+									{
+										<option value=@u.Id>@u.UserName</option>
+									}
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<label class="form-label">Description</label>
+								<textarea class="form-control" asp-for="@Model.Description"></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<label class="form-label">Due Date</label>
+								<input type="date" asp-for="@Model.DueDate" class="form-control" />
+							</div>
+							<div class="col">
+								<label class="form-label">Due Time</label>
+								<input type="time" asp-for="@Model.DueTime" class="form-control" />
+							</div>
+						</div>
+						<div class="row py-2">
+							<div class="col d-flex justify-content-center">
+								<label>Mark as Important?</label>
+								<input type="checkbox" asp-for="@Model.IsImportant" class="form-check-sm mx-3" />
+							</div>
+						</div>
+						<div class="row mt-3">
+							<div class="col d-flex justify-content-center">
+								<button class="btn btn-primary" type="submit">Add</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+		</div>
+
+		<div class="col-8 mt-3">
+			<div class="list-group">
+
+				@foreach (var t in Tasks)
+				{
+					<a asp-action="TaskDetails" asp-route-id="@t.Id" class="list-group-item list-group-item-action" aria-current="true">
+						<div class="d-flex w-100 justify-content-between">
+							<h5 class="mb-1">@t.Title</h5>
+							<small>@t.CreatedAt</small>
+						</div>
+						<p class="mb-1">@t.Description</p>
+						<small>And some small print.</small>
+					</a>
+				}
+
+			</div>
+		</div>
+	</div>
+	
+
+</div>
+
+<div class="modal" tabindex="-1" id="del_modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Delete confirmation</h5>
+				<button type="button" class="btn-close" onclick="closeModal()"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to delete?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+				<button type="button" class="btn btn-danger" onclick="deleteCatagory()">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>
+
