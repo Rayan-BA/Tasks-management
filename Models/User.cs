@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Final_Project.Areas.Identity.Data;
+namespace Final_Project.Models;
 
 // Add profile data for application users by adding properties to the User class
 public class User : IdentityUser<int>

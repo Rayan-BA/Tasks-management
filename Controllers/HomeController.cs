@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Final_Project.Areas.Identity.Data;
+//using Final_Project.Areas.Identity.Data;
 using Final_Project.Data;
 using Final_Project.Models;
 using Microsoft.AspNetCore.Identity;
@@ -13,15 +13,15 @@ namespace Final_Project.Controllers
     private readonly ApplicationDbContext _DbContext;
     private readonly IHttpContextAccessor _httpContext;
     private readonly UserManager<User> _userManager;
-    private readonly IdentityContext _identityContext;
+    //private readonly IdentityContext _identityContext;
     private readonly int _currentUser;
 
-    public HomeController(ApplicationDbContext context, IHttpContextAccessor httpContext, UserManager<User> userManager, IdentityContext identityContext)
+    public HomeController(ApplicationDbContext context, IHttpContextAccessor httpContext, UserManager<User> userManager)
     {
       _DbContext = context;
       _httpContext = httpContext;
       _userManager = userManager;
-      _identityContext = identityContext;
+      //_identityContext = identityContext;
       //_currentUser = Convert.ToInt32(_userManager.GetUserId(HttpContext.User)); // uncomment later
     }
 
