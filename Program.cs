@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Final_Project.Data;
 using Final_Project.Models;
@@ -15,9 +16,12 @@ internal class Program
 
     builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-    //builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    builder.Services.AddAuthorization();
 
-    builder.Services.AddIdentity<User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+    builder.Services.AddIdentity<User, IdentityRole<int>>()
+      .AddEntityFrameworkStores<ApplicationDbContext>()
+      .AddDefaultTokenProviders()
+      .AddDefaultUI();
 
     builder.Services.AddScoped<UserManager<User>>();
 
@@ -34,6 +38,8 @@ internal class Program
       app.UseHsts();
     }
 
+    app.MapIdentityApi<User>();
+
     app.UseHttpsRedirection();
     app.UseRouting();
 
@@ -46,8 +52,8 @@ internal class Program
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
-        .WithStaticAssets();
-
+        .WithStaticAssets()
+        .RequireAuthorization();
 
     app.Run();
   }
