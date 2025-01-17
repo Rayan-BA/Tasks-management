@@ -14,5 +14,5 @@ namespace Final_Project.Models;
 public class User : IdentityUser<int>
 {
   public int? ManagerId { get; set; }
-  public required string DisplayName { get; set; }
+  public string? DisplayName { get; set; }
 }
