@@ -1,22 +1,21 @@
-﻿
-@{
+﻿@{
 	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-	var Users = ViewBag.Users;
+	var Groups = ViewBag.Groups;
 }
 
 <div class="container">
 	<div class="row">
 		<div class="col-md-12 page-header">
-			<h2 class="page-title">Users</h2>
+			<h2 class="page-title">Groups</h2>
 		</div>
 	</div>
 	<div class="row align-content-center mt-3">
 		<div class="col-md-12 mt-3">
 			<div class="list-group">
 
-				@foreach (var u in Users)
+				@foreach (var u in Groups)
 				{
-					<a asp-action="UserDetails" asp-route-id="@u.Id" class="list-group-item list-group-item-action" aria-current="true">
+					<a asp-action="GroupDetails" asp-route-id="@u.Id" class="list-group-item list-group-item-action" aria-current="true">
 						<div class="d-flex w-100 justify-content-between">
 							<h5 class="mb-1">@u.DisplayName</h5>
 						</div>
