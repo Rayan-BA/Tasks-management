@@ -10,6 +10,8 @@ namespace Final_Project.Data
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     public DbSet<TaskModel> Task { get; set; }
+    public DbSet<Group> Group { get; set; }
+    public DbSet<GroupMemberships> GroupMemberships { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
