@@ -1,75 +1,82 @@
 ﻿<!DOCTYPE html>
 <html lang="en" style="height:100vh;">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Final_Project</title>
-    <script type="importmap"></script>
-    <link href="~/assets/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet">
-    <link href="~/assets/vendor/fontawesome/css/solid.min.css" rel="stylesheet">
-    <link href="~/assets/vendor/fontawesome/css/brands.min.css" rel="stylesheet">
-    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="~/assets/css/master.css" rel="stylesheet">
-    <link href="~/assets/vendor/flagiconcss/css/flag-icon.min.css" rel="stylesheet">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Final_Project</title>
+	<script type="importmap"></script>
+	<link href="~/assets/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet">
+	<link href="~/assets/vendor/fontawesome/css/solid.min.css" rel="stylesheet">
+	<link href="~/assets/vendor/fontawesome/css/brands.min.css" rel="stylesheet">
+	<link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="~/assets/css/master.css" rel="stylesheet">
+	<link href="~/assets/vendor/flagiconcss/css/flag-icon.min.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex">
-                  <div class="col"></div>
-                    <ul class="navbar-nav flex-grow-1 align-items-center justify-content-around">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark fs-5" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark fs-5" asp-area="" asp-controller="Home" asp-action="Tasks"><i class="fas fa-tasks"></i> Tasks</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark fs-5" asp-area="" asp-controller="Home" asp-action="Groups"><i class="fas fa-user-friends"></i> Groups</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <div class="nav-dropdown">
-                                <a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user"></i> <span>John Doe</span> <i style="font-size: .8em;" class="fas fa-caret-down"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end nav-link-menu">
-                                    <ul class="nav-list text-dark">
-                                        <li><a href="" class="dropdown-item text-dark"><i class="fas fa-address-card"></i> Profile</a></li>
-                                        <li><a href="" class="dropdown-item text-dark"><i class="fas fa-cog"></i> Settings</a></li>
-                                        <div class="dropdown-divider"></div>
-                                        <li><a href="" class="dropdown-item text-dark"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="col"></div>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container-fluid">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex">
+					<div class="col"></div>
+					<ul class="navbar-nav flex-grow-1 align-items-center justify-content-around">
+						<li class="nav-item">
+							<a class="nav-link text-dark fs-5" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark fs-5" asp-area="" asp-controller="Home" asp-action="Tasks"><i class="fas fa-tasks"></i> Tasks</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark fs-5" asp-area="" asp-controller="Home" asp-action="Groups"><i class="fas fa-user-friends"></i> Groups</a>
+						</li>
+						<li class="nav-item dropdown">
+							<div class="nav-dropdown">
+								<a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+									<i class="fas fa-user"></i> <span>John Doe</span> <i style="font-size: .8em;" class="fas fa-caret-down"></i>
+								</a>
+								<div class="dropdown-menu dropdown-menu-end nav-link-menu">
+									<ul class="nav-list text-dark">
+										<li><a href="#" class="dropdown-item text-dark"><i class="fas fa-address-card"></i> Profile</a></li>
+										<li><a href="#" class="dropdown-item text-dark"><i class="fas fa-cog"></i> Settings</a></li>
+										<div class="dropdown-divider"></div>
+										<li>
+											<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+												<a href="#" onclick="this.parentElement.submit()" class="dropdown-item text-dark"><i class="fas fa-sign-out-alt"></i> Logout</a>
+											</form>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<div class="col"></div>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
 
-    @* <footer class="border-top footer text-muted">
+	@* <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - Final_Project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer> *@
 
-    <script src="~/assets/vendor/jquery/jquery.min.js"></script>
-    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/assets/vendor/chartsjs/Chart.min.js"></script>
-    <script src="~/assets/js/charts.js"></script>
-    <script src="~/assets/js/script.js"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+	<script src="~/assets/vendor/jquery/jquery.min.js"></script>
+	<script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="~/assets/vendor/chartsjs/Chart.min.js"></script>
+	<script src="~/assets/js/charts.js"></script>
+	<script src="~/assets/js/script.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", () => doughnutchart())
+	</script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
