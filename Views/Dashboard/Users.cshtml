@@ -1,7 +1,7 @@
-﻿
+﻿@model List<User>;
+
 @{
 	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-	var Users = ViewBag.Users;
 }
 
 <div class="container">
@@ -11,21 +11,32 @@
 		</div>
 	</div>
 	<div class="row align-content-center mt-3">
-		<div class="col-md-12 mt-3">
-			<div class="list-group">
-
-				@foreach (var u in Users)
+		<div class="col-md-4">
+			<h5>Requests</h5>
+		</div>
+		<div class="col-md-8">
+			<h5>My Staff</h5>
+				@foreach (var u in Model)
 				{
-					<a asp-action="UserDetails" asp-route-id="@u.Id" class="list-group-item list-group-item-action" aria-current="true">
-						<div class="d-flex w-100 justify-content-between">
-							<h5 class="mb-1">@u.DisplayName</h5>
+					<a asp-action="UserDetails" asp-route-id="@u.Id" class="" aria-current="true">
+						<div class="card">
+							<div class="row">
+								<div class="col-auto align-content-center">
+									<img src="~/images/64px-Default_pfp.svg.png" class="card-img img-fluid" />
+								</div>
+								<div class="col">
+									<div class="card-body">
+										<h6>@u.DisplayName</h6>
+										<div class="card-text">
+											@u.Email
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<p class="mb-1">@u.Email</p>
-						<small>And some small print.</small>
 					</a>
 				}
 
-			</div>
 		</div>
 	</div>
 </div>

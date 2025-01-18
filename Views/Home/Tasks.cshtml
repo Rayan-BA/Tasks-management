@@ -1,25 +1,121 @@
-﻿
-@{
+﻿@{
 	var Tasks = ViewBag.Tasks;
 }
 
 <div class="container">
 	<div class="row">
-		<div class="col mt-3">
-			<div class="list-group">
-
-				@foreach (var t in Tasks)
-				{
-					<a asp-action="" asp-route-id="" class="list-group-item list-group-item-action" aria-current="true">
-						<div class="d-flex w-100 justify-content-between">
-							<h5 class="mb-1">@t.Title</h5>
-							<small>@t.CreatedAt</small>
+		<div class="col d-flex justify-content-center page-header">
+			<h2 class="page-title">Tasks</h2>
+		</div>
+	</div>
+	<div class="row justify-content-center mt-3">
+		<div class="col-md-8">
+			<div class="row">
+				<div class="col">
+					<div class="card">
+						<div class="card-header text-center">Important Tasks</div>
+						<div class="card-body">
+							<ul class="list-group">
+								@foreach (var t in Tasks)
+								{
+									<li class="list-group-item">
+										<div class="row">
+											<div class="col">
+												@t.Title
+											</div>
+											<div class="col-auto">
+												<div class="row flex-column">
+													<div class="col">
+														<small class="text-muted" title="Due Date">@t.DueDate</small>
+													</div>
+													<div class="col">
+														<small class="text-muted" title="Due Time">@t.DueTime</small>
+													</div>
+												</div>
+											</div>
+											<div class="col-auto">
+												@if (@t.IsImportant)
+												{
+													<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
+												}
+											</div>
+										</div>
+									</li>
+								}
+							</ul>
 						</div>
-						<p class="mb-1">@t.Description</p>
-						<small>And some small print.</small>
-					</a>
-				}
-
+					</div>
+				</div>
+				<div class="col">
+					<div class="card">
+						<div class="card-header text-center">Incompleted Tasks</div>
+						<div class="card-body">
+							<ul class="list-group">
+								@foreach (var t in Tasks)
+								{
+									<li class="list-group-item">
+										<div class="row">
+											<div class="col">
+												@t.Title
+											</div>
+											<div class="col-auto">
+												<div class="row flex-column">
+													<div class="col">
+														<small class="text-muted" title="Due Date">@t.DueDate</small>
+													</div>
+													<div class="col">
+														<small class="text-muted" title="Due Time">@t.DueTime</small>
+													</div>
+												</div>
+											</div>
+											<div class="col-auto">
+												@if (@t.IsImportant)
+												{
+													<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
+												}
+											</div>
+										</div>
+									</li>
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="card">
+						<div class="card-header text-center">Completed Tasks</div>
+						<div class="card-body">
+							<ul class="list-group">
+								@foreach (var t in Tasks)
+								{
+									<li class="list-group-item">
+										<div class="row">
+											<div class="col">
+												@t.Title
+											</div>
+											<div class="col-auto">
+												<div class="row flex-column">
+													<div class="col">
+														<small class="text-muted" title="Due Date">@t.DueDate</small>
+													</div>
+													<div class="col">
+														<small class="text-muted" title="Due Time">@t.DueTime</small>
+													</div>
+												</div>
+											</div>
+											<div class="col-auto">
+												@if (@t.IsImportant)
+												{
+													<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
+												}
+											</div>
+										</div>
+									</li>
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

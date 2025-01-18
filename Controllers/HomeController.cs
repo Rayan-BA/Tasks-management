@@ -13,16 +13,14 @@ namespace Final_Project.Controllers
     private readonly ApplicationDbContext _DbContext;
     private readonly IHttpContextAccessor _httpContext;
     private readonly UserManager<User> _userManager;
-    //private readonly IdentityContext _identityContext;
-    private readonly int _currentUser;
+    private readonly int _currentUserId;
 
     public HomeController(ApplicationDbContext context, IHttpContextAccessor httpContext, UserManager<User> userManager)
     {
       _DbContext = context;
       _httpContext = httpContext;
       _userManager = userManager;
-      //_identityContext = identityContext;
-      //_currentUser = Convert.ToInt32(_userManager.GetUserId(HttpContext.User)); // uncomment later
+      _currentUserId = Convert.ToInt32(_userManager.GetUserId(httpContext.HttpContext.User));
     }
 
     public IActionResult Index()
@@ -44,6 +42,12 @@ namespace Final_Project.Controllers
     public IActionResult Groups()
     {
       return View();
+    }
+
+    public IActionResult Profile()
+    {
+      var user = _DbContext.Users.Find(_currentUserId);
+      return View(user);
     }
   }
 }

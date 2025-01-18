@@ -1,139 +1,188 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
-    var DueToday = ViewBag.DueToday;
-    // var DueThisWeek    = ViewBag.DueThisWeek;
-    var TotalTasks = ViewBag.TotalTasks;
-    var ImportantTasks = ViewBag.ImportantTasks;
-    var Tasks = ViewBag.Tasks;
+	ViewData["Title"] = "Home Page";
+	var DueToday = ViewBag.DueToday;
+	// var DueThisWeek    = ViewBag.DueThisWeek;
+	var TotalTasks = ViewBag.TotalTasks;
+	var ImportantTasks = ViewBag.ImportantTasks;
+	var Tasks = ViewBag.Tasks;
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="content">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="icon-big text-center">
-                                <i class="fas fa-tasks" style="color:red"></i>
-                            </div>
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="detail">
-                                <p class="detail-subtitle">Tasks Due</p>
-                                <span class="number">@DueToday</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <div class="stats">
-                            <i class="fas fa-calendar-day"></i> For Today
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+	<div class="row">
+		<div class="col d-flex justify-content-center page-header">
+			<h2 class="page-title">Overview</h2>
+		</div>
+	</div>
+	<div class="row justify-content-center mt-3">
+		<div class="col-md-8">
+			<div class="row">
+				<div class="col-lg">
+					<div class="card">
+						<div class="content">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="icon-big text-center">
+										<i class="fas fa-tasks" style="color:red"></i>
+									</div>
+								</div>
+								<div class="col-sm-8 d-flex justify-content-center">
+									<div class="detail">
+										<p class="detail-subtitle">Tasks Due</p>
+										<div class="row">
+											<div class="col d-flex justify-content-center">
+												<span class="number">
+													@DueToday
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="footer">
+								<div class="stats">
+									<i class="fas fa-calendar-day"></i> Today
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-        <div class="col">
-            <div class="card">
-                <div class="content">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="icon-big text-center">
-                                <i class="fas fa-tasks" style="color:darkorange"></i>
-                            </div>
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="detail">
-                                <p class="detail-subtitle">Tasks Due</p>
-                                <span class="number">0000</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <div class="stats">
-                            <i class="fas fa-calendar-week"></i> For This Week
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+				<div class="col-lg">
+					<div class="card">
+						<div class="content">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="icon-big text-center">
+										<i class="fas fa-tasks" style="color:darkorange"></i>
+									</div>
+								</div>
+								<div class="col-sm-8 d-flex justify-content-center">
+									<div class="detail">
+										<p class="detail-subtitle">Tasks Due</p>
+										<div class="row">
+											<div class="col d-flex justify-content-center">
+												<span class="number">
+													00
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="footer">
+								<div class="stats">
+									<i class="fas fa-calendar-week"></i> This Week
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-        <div class="col">
-            <div class="card">
-                <div class="content">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="icon-big text-center">
-                                <i class="fas fa-tasks"></i>
-                            </div>
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="detail">
-                                <p class="detail-subtitle">Total Incomplete Tasks</p>
-                                <span class="number">@TotalTasks</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <div class="stats">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+				<div class="col-lg">
+					<div class="card">
+						<div class="content">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="icon-big text-center">
+										<i class="fas fa-tasks"></i>
+									</div>
+								</div>
+								<div class="col-sm-8 d-flex justify-content-center">
+									<div class="detail">
+										<p class="detail-subtitle" title="Incomplete Tasks">Inc. Tasks</p>
+										<div class="row">
+											<div class="col d-flex justify-content-center">
+												<span class="number">
+													@TotalTasks
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="footer">
+								<div class="stats">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-        <div class="col">
-            <div class="card">
-                <div class="content">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="icon-big text-center">
-                                <i class="fas fa-exclamation-circle"></i>
-                            </div>
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="detail">
-                                <p class="detail-subtitle">Important Tasks</p>
-                                <span class="number">@ImportantTasks</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <div class="stats">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+				<div class="col-lg">
+					<div class="card">
+						<div class="content">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="icon-big text-center">
+										<i class="fas fa-exclamation-circle"></i>
+									</div>
+								</div>
+								<div class="col-sm-8 d-flex justify-content-center">
+									<div class="detail">
+										<p class="detail-subtitle" title="Important Tasks">Imp. Tasks</p>
+										<div class="row">
+											<div class="col d-flex justify-content-center">
+												<span class="number">
+													@ImportantTasks
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="footer">
+								<div class="stats">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Tasks Assinged To</div>
-                <div class="card-body">
-                    <p class="card-title"></p>
-                    <div class="canvas-wrapper">
-                        <canvas class="chart" id="doughnutchart" style="display: block; box-sizing: border-box;" height: 602px; width: 602px;" width="602" height="602"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Most Recent Tasks</div>
-                <div class="card-body">
-                    <ul class="list-group">
-                      @foreach(var t in Tasks)
-                      {
-                        <li class="list-group-item">@t.Title</li>
-                      }
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+			<div class="row">
+				<div class="col-lg">
+					<div class="card">
+						<div class="card-header">Tasks Assinged To</div>
+						<div class="card-body">
+							<p class="card-title"></p>
+							<div class="canvas-wrapper">
+								<canvas class="chart" id="doughnutchart"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg">
+					<div class="card">
+						<div class="card-header">Most Recent Tasks</div>
+						<div class="card-body">
+							<ul class="list-group">
+								@foreach (var t in Tasks)
+								{
+									<li class="list-group-item">
+										<div class="row">
+											<div class="col">
+												@t.Title
+											</div>
+											<div class="col-auto">
+												<small class="text-muted" title="Due Date">@t.DueDate</small> <small class="text-muted" title="Due Time">@t.DueTime</small>
+											</div>
+											<div class="col-auto">
+												@if (@t.IsImportant)
+												{
+													<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
+												}
+											</div>
+										</div>
+									</li>
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 </div>
 

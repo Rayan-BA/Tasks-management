@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Final_Project.Models;
 using Microsoft.AspNetCore.Identity;
-//using Final_Project.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 
@@ -14,16 +13,14 @@ namespace Final_Project.Controllers
     private readonly ApplicationDbContext _DbContext;
     private readonly IHttpContextAccessor _httpContext;
     private readonly UserManager<User> _userManager;
-    //private readonly IdentityContext _identityContext;
-    private readonly int _currentUser;
+    private readonly int _currentUserId;
 
     public DashboardController(ApplicationDbContext context, IHttpContextAccessor httpContext, UserManager<User> userManager)
     {
       _DbContext = context;
       _httpContext = httpContext;
       _userManager = userManager;
-      //_identityContext = identityContext;
-      //_currentUser = Convert.ToInt32(_userManager.GetUserId(HttpContext.User)); // uncomment later
+      _currentUserId = Convert.ToInt32(_userManager.GetUserId(httpContext.HttpContext.User)); // uncomment later
     }
 
     public IActionResult Index()
@@ -33,7 +30,7 @@ namespace Final_Project.Controllers
 
     public IActionResult Tasks()
     {
-      var users = _DbContext.Users.Where(u => u.ManagerId == this._currentUser);
+      var users = _DbContext.Users.Where(u => u.ManagerId == _currentUserId);
       ViewBag.Users = users;
       ViewBag.Tasks = _DbContext.Task.ToList();
       return View();
@@ -104,8 +101,8 @@ namespace Final_Project.Controllers
 
     public IActionResult Users()
     {
-      ViewBag.Users = _DbContext.Users.ToList();
-      return View();
+      var users = _DbContext.Users.ToList();
+      return View(users);
     }
 
     public IActionResult Groups()

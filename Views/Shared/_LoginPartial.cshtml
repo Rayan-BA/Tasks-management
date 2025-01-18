@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Final_Project.Models
+@using Final_Project.Data
 
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
@@ -7,14 +8,33 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
+		<li class="nav-item dropdown">
+			<div class="nav-dropdown">
+				<a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+					<img src="~/images/32px-Default_pfp.svg.png" alt="Alternate Text" /> <span>@UserManager.GetUserAsync(User).Result.DisplayName</span> <i style="font-size: .8em;" class="fas fa-caret-down"></i>
+				</a>
+				<div class="dropdown-menu dropdown-menu-end nav-link-menu">
+					<ul class="nav-list text-dark">
+						<li><a asp-action="Profile" class="dropdown-item text-dark"><i class="fas fa-address-card"></i> Profile</a></li>
+						<li><a href="#" class="dropdown-item text-dark"><i class="fas fa-cog"></i> Settings</a></li>
+						<div class="dropdown-divider"></div>
+						<li>
+							<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+								<a href="#" onclick="this.parentElement.submit()" class="dropdown-item text-dark"><i class="fas fa-sign-out-alt"></i> Logout</a>
+							</form>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</li>
+    @* <li class="nav-item">
         <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
     </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
             <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
         </form>
-    </li>
+    </li> *@
 }
 else
 {

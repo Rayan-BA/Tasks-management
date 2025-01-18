@@ -32,25 +32,7 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark fs-5" asp-area="" asp-controller="Home" asp-action="Groups"><i class="fas fa-user-friends"></i> Groups</a>
 						</li>
-						<li class="nav-item dropdown">
-							<div class="nav-dropdown">
-								<a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
-									<i class="fas fa-user"></i> <span>John Doe</span> <i style="font-size: .8em;" class="fas fa-caret-down"></i>
-								</a>
-								<div class="dropdown-menu dropdown-menu-end nav-link-menu">
-									<ul class="nav-list text-dark">
-										<li><a href="#" class="dropdown-item text-dark"><i class="fas fa-address-card"></i> Profile</a></li>
-										<li><a href="#" class="dropdown-item text-dark"><i class="fas fa-cog"></i> Settings</a></li>
-										<div class="dropdown-divider"></div>
-										<li>
-											<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-												<a href="#" onclick="this.parentElement.submit()" class="dropdown-item text-dark"><i class="fas fa-sign-out-alt"></i> Logout</a>
-											</form>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</li>
+						<partial name="_LoginPartial.cshtml"/>
 					</ul>
 					<div class="col"></div>
 				</div>

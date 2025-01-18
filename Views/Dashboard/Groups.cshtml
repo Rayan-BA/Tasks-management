@@ -1,6 +1,7 @@
-﻿@{
+﻿@model List<Group>;
+
+@{
 	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-	var Groups = ViewBag.Groups;
 }
 
 <div class="container">
@@ -13,16 +14,7 @@
 		<div class="col-md-12 mt-3">
 			<div class="list-group">
 
-				@foreach (var u in Groups)
-				{
-					<a asp-action="GroupDetails" asp-route-id="@u.Id" class="list-group-item list-group-item-action" aria-current="true">
-						<div class="d-flex w-100 justify-content-between">
-							<h5 class="mb-1">@u.DisplayName</h5>
-						</div>
-						<p class="mb-1">@u.Email</p>
-						<small>And some small print.</small>
-					</a>
-				}
+				
 
 			</div>
 		</div>
