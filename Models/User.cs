@@ -15,4 +15,5 @@ public class User : IdentityUser<int>
 {
   public int? ManagerId { get; set; }
   public string? DisplayName { get; set; }
+  public byte[]? Image { get; set; }
 }

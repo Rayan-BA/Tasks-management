@@ -1,5 +1,4 @@
-﻿@{
-}
+﻿@model List<Group>;
 
 <div class="container">
 	<div class="row">
@@ -8,26 +7,34 @@
 		</div>
 	</div>
 	<div class="row justify-content-center mt-3">
-		<div class="col-md-8">
-			<div class="row">
-				<div class="col">
-					<div class="card">
-						<div class="card-header">groups list</div>
+		<div class="col-md-9">
+			<div class="row" style="height: 700px;max-height: 700px;">
+				<div class="col-4">
+					<div class="card" style="height: 700px;max-height: 700px;">
+						<div class="card-header">My Groups</div>
+						<div class="card-body">
+							<ul class="list-group" id="groups-list">
+								@foreach (var g in Model)
+								{
+									<li class="list-group-item">
+										<a href="#" onclick="loadGroup(@g.Id, this.parentElement)">
+											<div class="row">
+												<div class="col">
+													<span>@g.Name</span>
+												</div>
+												<div class="col-auto">
+													<i class="fas fa-angle-right"></i>
+												</div>
+											</div>
+										</a>
+									</li>
+								}
+							</ul>
+						</div>
 					</div>
 				</div>
-				<div class="col">
-					<div class="row">
-						<div class="card">
-							<div class="card-header">group tasks</div>
-						</div>
-
-					</div>
-					<div class="row">
-						<div class="card">
-							<div class="card-header">group members</div>
-						</div>
-
-					</div>
+				<div id="group-partial" class="col">
+					<partial name="_Partials/_GroupPartial.cshtml" />
 				</div>
 			</div>
 		</div>

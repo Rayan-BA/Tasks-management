@@ -1,0 +1,45 @@
+﻿@using Final_Project.FormModels
+@model ProfileEditModel;
+
+<div class="container">
+	<div class="row">
+		<div class="col d-flex justify-content-center page-header">
+			<h2 class="page-title">Edit Profile</h2>
+		</div>
+	</div>
+	<div class="row justify-content-center mt-3">
+		<div class="col-md-9">
+			<div class="card">
+				<div class="card-body">
+					<form enctype="multipart/form-data" asp-action="UpdateProfile" method="post">
+						<div class="row flex-column gap-4 align-content-center">
+							<div class="col-md-6 d-flex justify-content-center">
+								<label class="">
+								<div class="" id="pfp" title="Change image">
+									<input type="file" name="img" value="Upload Photo" id="fileinput" style="width: 0px;height: 0px;overflow: hidden;" />
+									</div>
+								</label>
+								
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Display Name</label>
+								<input class="form-control" value="@ViewBag.DisplayName" name="DisplayName" />
+							</div>
+							
+							<div class="col-md-6">
+								<label class="form-label">Manager</label>
+								<input class="form-control" name="ManagerEmail" value="@ViewBag.ManagerEmail"/>
+							</div>
+						</div>
+						<div class="row mt-3">
+							<div class="col d-flex justify-content-center gap-3">
+								<button class="btn btn-secondary" type="button" onclick="cancelEditProfile()">Cancel</button>
+								<button type="submit" class="btn btn-primary">Save</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

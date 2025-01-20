@@ -7,43 +7,53 @@
 		</div>
 	</div>
 	<div class="row justify-content-center mt-3">
-		<div class="col-md-8">
+		<div class="col-md-9">
 			<div class="card">
-				@* <div class="card-header">My Profile</div> *@
 				<div class="card-body">
-					<div class="row flex-column gap-4 align-content-center">
-						<div class="col-md-6 d-flex justify-content-center">
-							<img src="#" alt="Profile Image" />
-						</div>
-						<div class="col-md-6">
-							<label class="form-label">Display Name</label>
-							<label class="form-control">@Model.DisplayName</label>
-						</div>
-						<div class="col-md-6">
-							<label class="form-label">Email</label>
-							<label class="form-control">@Model.Email</label>
-						</div>
-						<div class="col-md-6">
-							<label class="form-label">Manager</label>
-							<label class="form-control">
-								@if (@Model.ManagerId != null)
+					<form asp-action="EditProfile" asp-route-id="@Model.Id">
+						<div class="row flex-column gap-4 align-content-center">
+							<div class="col-md-6 d-flex justify-content-center">
+								@if (ViewBag.Image != null)
 								{
-									@Model.ManagerId
+									<img src="@ViewBag.Image" alt="Profile Image" />
 								}
 								else
 								{
-									<span>Not set</span>
+									<img src="~/images/128px-Default_pfp.svg.png" alt="Profile Image" />
 								}
-							</label>
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Display Name</label>
+								<label class="form-control">@Model.DisplayName</label>
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Email</label>
+								<label class="form-control">@Model.Email</label>
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Manager (email)</label>
+								<label class="form-control">
+									@if (ViewBag.ManagerEmail != null)
+									{
+										@ViewBag.ManagerEmail
+									}
+									else
+									{
+										<span>Not set</span>
+									}
+								</label>
+								@if (ViewBag.PendingManagerEmail != null)
+								{
+									<small class="text-muted">Request pending to @ViewBag.PendingManagerEmail</small>
+								}
+							</div>
 						</div>
-					</div>
-				</div>
-				<div class="card-footer">
-					<div class="row">
-						<div class="col d-flex justify-content-center">
-							<button class="btn btn-primary">Edit</button>
+						<div class="row mt-3">
+							<div class="col d-flex justify-content-center">
+								<button class="btn btn-secondary" type="submit">Edit</button>
+							</div>
 						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 		</div>

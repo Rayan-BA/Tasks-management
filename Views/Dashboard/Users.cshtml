@@ -5,38 +5,85 @@
 }
 
 <div class="container">
-	<div class="row">
-		<div class="col-md-12 page-header">
-			<h2 class="page-title">Users</h2>
-		</div>
-	</div>
-	<div class="row align-content-center mt-3">
-		<div class="col-md-4">
-			<h5>Requests</h5>
-		</div>
-		<div class="col-md-8">
-			<h5>My Staff</h5>
-				@foreach (var u in Model)
-				{
-					<a asp-action="UserDetails" asp-route-id="@u.Id" class="" aria-current="true">
-						<div class="card">
-							<div class="row">
-								<div class="col-auto align-content-center">
-									<img src="~/images/64px-Default_pfp.svg.png" class="card-img img-fluid" />
-								</div>
-								<div class="col">
-									<div class="card-body">
-										<h6>@u.DisplayName</h6>
-										<div class="card-text">
-											@u.Email
+	<div class="row justify-content-center">
+		<div class="col-md-9">
+			<div class="row">
+				<div class="col page-header d-flex justify-content-center">
+					<h2 class="page-title">Users</h2>
+				</div>
+			</div>
+
+			<div class="row align-content-center mt-3">
+				<div class="col-md-6">
+					<div class="card" style="height:700px;max-height:700px;">
+						<div class="card-header text-center">Requests</div>
+						<div class="card-body overflow-scroll">
+							<div class="list-group">
+								@foreach (var u in ViewBag.ReqUsers)
+								{
+									<div class="list-group-item list-group-item-action" aria-current="true">
+										@* <div class="card"> *@
+										<div class="row">
+											<div class="col-auto align-content-center">
+												<img src="~/images/64px-Default_pfp.svg.png" class="card-img img-fluid" />
+											</div>
+											<div class="col">
+												@* <div class="card-body"> *@
+												<h6>@u.DisplayName</h6>
+												<div class="card-text">
+													@u.Email
+												</div>
+												@* </div> *@
+											</div>
+											@* </div> *@
+											<div class="col">
+												<div class="row g-3">
+													<div class="col">
+														<a href="#" class="" onclick="acceptReq(@u.Id)"><i class="fa-solid fa-circle-check"></i> Accept</a>
+													</div>
+													<div class="col">
+														<a href="#" class="" onclick="rejectReq(@u.Id)"><i class="fa-solid fa-circle-xmark"></i> Reject</a>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
-								</div>
+								}
 							</div>
 						</div>
-					</a>
-				}
-
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card" style="height:700px;max-height:700px;">
+						<div class="card-header text-center">My Staff</div>
+						<div class="card-body overflow-scroll">
+							<div class="list-group">
+								@foreach (var u in Model)
+								{
+									<a asp-action="UserDetails" asp-route-id="@u.Id" class="list-group-item list-group-item-action" aria-current="true">
+										@* <div class="card"> *@
+										<div class="row">
+											<div class="col-auto align-content-center">
+												<img src="~/images/64px-Default_pfp.svg.png" class="card-img img-fluid" />
+											</div>
+											<div class="col">
+												@* <div class="card-body"> *@
+												<h6>@u.DisplayName</h6>
+												<div class="card-text">
+													@u.Email
+												</div>
+												@* </div> *@
+											</div>
+											@* </div> *@
+										</div>
+									</a>
+								}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+
 </div>

@@ -7,6 +7,18 @@ function deleteTask(id) {
   window.location.href = "/Dashboard/DeleteTask?Id=" + id;
 }
 
-function cancelEdit(id) {
+function cancelEditTask(id) {
   window.location.href = "/Dashboard/TaskDetails?Id=" + id;
+}
+
+function selectedMembers(s) {
+  $("#selected-members").append(s.values);
+}
+
+function acceptReq(id) {
+  window.location.href = "/Dashboard/AcceptRequest?Id=" + id;
+}
+
+function rejectReq(id) {
+  window.location.href = "/Dashboard/RejectRequest?Id=" + id;
 }

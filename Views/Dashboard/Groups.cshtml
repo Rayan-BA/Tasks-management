@@ -1,22 +1,98 @@
-﻿@model List<Group>;
+﻿@model List<GroupMemberships>;
 
 @{
 	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+	var Groups = ViewBag.Groups;
+	var Memberships = ViewBag.Memberships;
+	var Users = ViewBag.Users;
 }
 
 <div class="container">
-	<div class="row">
-		<div class="col-md-12 page-header">
-			<h2 class="page-title">Groups</h2>
-		</div>
-	</div>
-	<div class="row align-content-center mt-3">
-		<div class="col-md-12 mt-3">
-			<div class="list-group">
+	<div class="row justify-content-center">
+		<div class="col-md-9">
+			<div class="row">
+				<div class="col page-header d-flex justify-content-center">
+					<h2 class="page-title">Tasks</h2>
+				</div>
+			</div>
+			<div class="row flex-column align-content-center mt-3">
+				<div class="col">
+					<div class="card">
+						<div class="card-header text-center">New Task</div>
+						<div class="card-body">
+							<form asp-action="CreateGroup" method="post">
+								<div class="row align-items-end">
+									<div class="col">
+										<label class="form-label">Name</label>
+										<input name="Name" class="form-control" />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<label class="form-label">Description</label>
+										<textarea class="form-control" name="Description"></textarea>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<label class="form-label">Members</label>
+										<select name="users" multiple class="form-select" oninput="selectedMembers(this)">
+											@foreach (var u in Users)
+											{
+												<option value="@u.Id">@u.DisplayName</option>
+											}
+										</select>
+										<small class="form-text">Ctrl + left click to choose multiple</small>
+									</div>
+									<div class="col">
+										<p id="selected-members" class="border">
 
-				
+										</p>
+									</div>
+								</div>
+								<div class="row mt-3">
+									<div class="col d-flex justify-content-center">
+										<button class="btn btn-primary" type="submit">Create</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
 
+				</div>
+
+				<div class="col-md-12 mt-3">
+					<div class="card">
+						<div class="card-header text-center">Registered Groups</div>
+						<div class="card-body">
+							<div class="list-group">
+
+								@foreach (var g in Groups)
+								{
+									<a asp-action="GroupDetails" asp-route-id="@g.Id" class="list-group-item list-group-item-action" aria-current="true">
+										<div class="row">
+											<div class="col">
+												<div class="d-flex w-100 justify-content-between">
+													<h5 class="mb-1">@g.Name</h5>
+													@* <small>@g.CreatedAt</small> *@
+												</div>
+												<p class="mb-1">@g.Description</p>
+											</div>
+											<div class="col">
+												Members: <span>@Model.Where(m => m.GroupId == g.Id).Count()</span>
+											</div>
+										</div>
+									</a>
+								}
+
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
+
+
+
 </div>

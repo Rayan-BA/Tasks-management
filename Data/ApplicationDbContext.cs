@@ -12,6 +12,7 @@ namespace Final_Project.Data
     public DbSet<TaskModel> Task { get; set; }
     public DbSet<Group> Group { get; set; }
     public DbSet<GroupMemberships> GroupMemberships { get; set; }
+    public DbSet<ManagerRequests> ManagerRequests { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
