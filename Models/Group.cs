@@ -9,5 +9,6 @@ namespace Final_Project.Models
     public string? Name { get; set; }
     public string? Description { get; set; }
     public DateTime? CreatedAt { get; set; }
+    public int ManagerId { get; set; }
   }
 }
