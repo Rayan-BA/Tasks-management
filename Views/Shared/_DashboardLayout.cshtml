@@ -17,7 +17,7 @@
 	<link href="~/assets/vendor/fontawesome/css/brands.min.css" rel="stylesheet">
 	<link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<link href="~/assets/css/master.css" rel="stylesheet">
-	<link href="~/assets/vendor/flagiconcss/css/flag-icon.min.css" rel="stylesheet">
+	@* <link href="~/assets/vendor/flagiconcss/css/flag-icon.min.css" rel="stylesheet"> *@
 	<link href="~/css/dashboard.css" rel="stylesheet" />
 </head>
 
@@ -45,7 +45,7 @@
 								<a asp-action="Index" class="text-dark fs-5"><i class="fas fa-home"></i> Dashboard</a>
 							</li>
 							<li>
-								<a asp-action="Tasks" class="text-dark fs-5"><i class="fas fa-tasks"></i> Tasks</a>
+								<a asp-action="Tasks" class="text-dark fs-5"><i class="fa-solid fa-list-check"></i> Tasks</a>
 							</li>
 							<li>
 								<a asp-action="Users" class="text-dark fs-5"><i class="fas fa-user"></i>Users</a>
@@ -68,6 +68,7 @@
 	<script src="~/assets/js/dashboard-charts.js"></script>
 	<script src="~/assets/js/script.js"></script>
 	<script src="~/js/dashbaord.js"></script>
+
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 
