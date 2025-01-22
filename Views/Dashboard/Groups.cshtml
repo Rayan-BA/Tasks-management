@@ -1,9 +1,7 @@
-﻿@model List<GroupMemberships>;
-
+﻿
 @{
 	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 	var Groups = ViewBag.Groups;
-	var Memberships = ViewBag.Memberships;
 	var Users = ViewBag.Users;
 }
 
@@ -12,13 +10,13 @@
 		<div class="col-md-9">
 			<div class="row">
 				<div class="col page-header d-flex justify-content-center">
-					<h2 class="page-title">Tasks</h2>
+					<h2 class="page-title">Groups</h2>
 				</div>
 			</div>
 			<div class="row flex-column align-content-center mt-3">
 				<div class="col">
 					<div class="card">
-						<div class="card-header text-center">New Task</div>
+						<div class="card-header text-center">New Group</div>
 						<div class="card-body">
 							<form asp-action="CreateGroup" method="post">
 								<div class="row align-items-end">
@@ -36,18 +34,13 @@
 								<div class="row">
 									<div class="col">
 										<label class="form-label">Members</label>
-										<select name="users" multiple class="form-select" oninput="selectedMembers(this)">
+										<select name="users" multiple class="form-select">
 											@foreach (var u in Users)
 											{
 												<option value="@u.Id">@u.DisplayName</option>
 											}
 										</select>
 										<small class="form-text">Ctrl + left click to choose multiple</small>
-									</div>
-									<div class="col">
-										<p id="selected-members" class="border">
-
-										</p>
 									</div>
 								</div>
 								<div class="row mt-3">
@@ -69,7 +62,7 @@
 
 								@foreach (var g in Groups)
 								{
-									<a asp-action="GroupDetails" asp-route-id="@g.Id" class="list-group-item list-group-item-action" aria-current="true">
+									<a class="list-group-item list-group-item-action" aria-current="true">
 										<div class="row">
 											<div class="col">
 												<div class="d-flex w-100 justify-content-between">
@@ -77,9 +70,6 @@
 													@* <small>@g.CreatedAt</small> *@
 												</div>
 												<p class="mb-1">@g.Description</p>
-											</div>
-											<div class="col">
-												Members: <span>@Model.Where(m => m.GroupId == g.Id).Count()</span>
 											</div>
 										</div>
 									</a>
