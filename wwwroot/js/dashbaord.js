@@ -11,14 +11,14 @@ function cancelEditTask(id) {
   window.location.href = "/Dashboard/TaskDetails?Id=" + id;
 }
 
-function selectedMembers(s) {
-  $("#selected-members").append(s.values);
-}
-
 function acceptReq(id) {
   window.location.href = "/Dashboard/AcceptRequest?Id=" + id;
 }
 
 function rejectReq(id) {
   window.location.href = "/Dashboard/RejectRequest?Id=" + id;
+}
+
+function progressBar(w) {
+  document.getElementById("progress").style.width = w + "%";
 }

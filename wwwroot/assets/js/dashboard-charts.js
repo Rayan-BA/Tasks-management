@@ -1,78 +1,76 @@
 // file changed.
 
-var trafficchart = document.getElementById("trafficflow");
-var saleschart = document.getElementById("sales");
+var total;
+var completed;
+var labels;
 
-trafficChartConfig = {
-  type: 'line',
-  data: {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    datasets: [{
-      data: ['1135', '1135', '1140', '1168', '1150', '1145', '1155', '1155', '1150', '1160', '1185', '1190'],
-      backgroundColor: "rgba(48, 164, 255, 0.2)",
-      borderColor: "rgba(48, 164, 255, 0.8)",
-      fill: true,
-      borderWidth: 1
-    }]
-  },
-  options: {
-    animation: {
-      duration: 2000,
-      easing: 'easeOutQuart',
-    },
-    plugins: {
-      legend: {
-        display: false,
-        position: 'right',
-      },
-      title: {
-        display: true,
-        text: 'Number of Visitors',
-        position: 'left',
-      },
-    },
+$.ajax({
+  url: "/Dashboard/ChartData",
+  type: "GET",
+  dataType: "json",
+  success: function (res) {
+    total = res.total;
+    completed = res.completed;
+    labels = res.labels;
+    taskChart();
   }
-};
+});
 
-if (chart1) {
-  chart1.destroy();
-  chart1 = new Chart(trafficchart, trafficChartConfig);
-}
-var chart1 = new Chart(trafficchart, trafficChartConfig);
+function taskChart() {
+  var tasksChart = document.getElementById("tasks-chart");
+  tasksChartConfig = {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Completed',
+          data: completed,
+          backgroundColor: "#7478ed",
+        },
+        {
+          label: 'Total',
+          data: total,
+          backgroundColor: "#f24b86",
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          stacked: true,
+          ticks: {
+            autoSkip: false,
+            maxRotation: 60,
+            minRotation: 60
+          }
+        },
+        y: {
+          min: 0,
+          max: Math.max(total),
+          ticks: {
+            stepSize: 50
+          }
+        },
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Number of Tasks',
+          position: 'left',
+        },
+      },
+    }
+  };
 
-salesChartConfig = {
-  type: 'bar',
-  data: {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    datasets: [{
-      label: 'Income',
-      data: ["280", "300", "400", "600", "450", "400", "500", "550", "450", "650", "950", "1000"],
-      backgroundColor: "rgba(76, 175, 80, 0.5)",
-      borderColor: "#6da252",
-      borderWidth: 1,
-    }]
-  },
-  options: {
-    animation: {
-      duration: 2000,
-      easing: 'easeOutQuart',
-    },
-    plugins: {
-      legend: {
-        display: false,
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Number of Sales',
-        position: 'left',
-      },
-    },
+  if (chart2) {
+    chart2.destroy();
+    chart2 = new Chart(tasksChart, tasksChartConfig);
   }
-};
-
-if (chart2) {
-  chart2.destroy();
-  chart2 = new Chart(saleschart, salesChartConfig);
+  var chart2 = new Chart(tasksChart, tasksChartConfig);
 }
-var chart2 = new Chart(saleschart, salesChartConfig);

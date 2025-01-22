@@ -4,6 +4,7 @@ using Final_Project.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using System.Collections.Generic;
 
 namespace Final_Project.Controllers
 {
@@ -25,19 +26,44 @@ namespace Final_Project.Controllers
 
     public IActionResult Index()
     {
+      ViewBag.PendingReq = _DbContext.ManagerRequests.Where(r => r.ManagerId == _currentUserId && r.IsPending).Count();
+      ViewBag.Uncompleted = _DbContext.Task.Where(t => t.AssignerId == _currentUserId && !t.IsCompleted).Count();
+      ViewBag.Overdue = _DbContext.Task.Where(t => 
+          t.AssignerId == _currentUserId && !t.IsCompleted).Count();
+      var completed = _DbContext.Task.Where(t => t.AssignerId == _currentUserId && t.IsCompleted).Count();
+      var total = _DbContext.Task.Where(t => t.AssignerId == _currentUserId).Count();
+      ViewBag.WeekProgress = Convert.ToInt32(completed / total);
       return View();
+    }
+
+    public JsonResult ChartData()
+    {
+      var users = _DbContext.Users.Where(u => u.ManagerId == _currentUserId).ToList();
+      List<string> labels = _DbContext.Users.Where(u => u.ManagerId == _currentUserId).Select(u => u.DisplayName).ToList();
+      List<int> dataTotal = new List<int>();
+      List<int> dataCompleted = new List<int>();
+      foreach (var user in users)
+      {
+        dataTotal.Add(_DbContext.Task.Where(t => t.UserId == user.Id).Count());
+        dataCompleted.Add(_DbContext.Task.Where(t => t.UserId == user.Id && t.IsCompleted).Count());
+      }
+      return new JsonResult(new
+      {
+        total = dataTotal,
+        completed = dataCompleted,
+        labels = labels
+      });
     }
 
     public IActionResult Tasks()
     {
       //var users = _DbContext.Users.Where(u => u.ManagerId == _currentUserId);
-      ViewBag.Users = _DbContext.Users.ToList();
-      ViewBag.Groups = _DbContext.Group.ToList();
+      ViewBag.Users = _DbContext.Users.Where(u => u.ManagerId == _currentUserId).ToList();
+      ViewBag.Groups = _DbContext.Group.Where(u => u.ManagerId == _currentUserId).ToList();
       ViewBag.Tasks = _DbContext.Task.OrderByDescending(t => t.CreatedAt).ToList();
       return View();
     }
 
-    [HttpPost]
     public IActionResult CreateTask(TaskModel task)
     {
       task.AssignerId = Convert.ToInt32(_userManager.GetUserId(HttpContext.User));
@@ -65,8 +91,8 @@ namespace Final_Project.Controllers
 
     public IActionResult EditTask(int Id)
     {
-      ViewBag.Users = _DbContext.Users.ToList();
-      ViewBag.Groups = _DbContext.Group.ToList();
+      ViewBag.Users = _DbContext.Users.Where(u => u.ManagerId == _currentUserId).ToList();
+      ViewBag.Groups = _DbContext.Group.Where(u => u.ManagerId == _currentUserId).ToList();
       var task = _DbContext.Task.SingleOrDefault(t => t.Id == Id);
       return View(task);
     }
@@ -91,7 +117,7 @@ namespace Final_Project.Controllers
 
     public IActionResult Users()
     {
-      var users = _DbContext.Users.ToList();
+      var users = _DbContext.Users.Where(u => u.ManagerId == _currentUserId).ToList();
       var requests = _DbContext.ManagerRequests.Where(r => r.ManagerId == _currentUserId && r.IsPending).ToList();
       var requestingUsers = new List<User>();
       requests.ForEach(req => {
@@ -126,15 +152,15 @@ namespace Final_Project.Controllers
 
     public IActionResult Groups()
     {
-      ViewBag.Groups = _DbContext.Group.ToList();
-      var ms = _DbContext.GroupMemberships.ToList();
-      ViewBag.Users = _DbContext.Users.ToList();
-      return View(ms);
+      ViewBag.Groups = _DbContext.Group.Where(g => g.ManagerId == _currentUserId).ToList();
+      ViewBag.Users = _DbContext.Users.Where(u => u.ManagerId == _currentUserId).ToList();
+      return View();
     }
 
     public IActionResult CreateGroup(Group group, List<string> users)
     {
       group.CreatedAt = DateTime.Now;
+      group.ManagerId = _currentUserId;
       _DbContext.Group.Add(group);
       _DbContext.SaveChanges();
       foreach (var userId in users)
@@ -144,5 +170,6 @@ namespace Final_Project.Controllers
       _DbContext.SaveChanges();
       return RedirectToAction("Groups");
     }
+
   }
 }
