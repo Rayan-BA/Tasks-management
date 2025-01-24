@@ -22,3 +22,7 @@ function rejectReq(id) {
 function progressBar(w) {
   document.getElementById("progress").style.width = w + "%";
 }
+
+function removeUser(id) {
+  window.location.href = "/Dashboard/RemoveUser?Id=" + id;
+}
