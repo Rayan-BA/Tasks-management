@@ -1,7 +1,4 @@
-﻿@{
-	var Tasks = ViewBag.Tasks;
-}
-
+﻿
 <div class="container">
 	<div class="row">
 		<div class="col d-flex justify-content-center page-header">
@@ -11,68 +8,35 @@
 	<div class="row justify-content-center mt-3">
 		<div class="col-md-9">
 			<div class="row" id="tasks">
-				<div class="col-4">
+				<div class="col">
 					<div class="card" style="height:700px;max-height: 700px;">
-						<div class="card-header text-center">Important</div>
+						<div class="card-header text-center">Uncompleted</div>
 						<div class="card-body overflow-scroll">
 							<ul class="list-group">
-								@foreach (var t in Tasks)
+								@foreach (var t in ViewBag.Uncompleted)
 								{
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col align-content-center text-nowrap text-truncate" title="@t.Title">
 												@t.Title
 											</div>
-											<div class="col-auto">
+											@* <div class="col-auto">
 												<div class="row flex-column">
 													<div class="col">
-														<small class="text-muted" title="Due Date">@t.DueDate</small>
-													</div>
-													<div class="col">
-														<small class="text-muted" title="Due Time">@t.DueTime</small>
+														<small class="text-muted" title="Due Date">@t.DueAt</small>
 													</div>
 												</div>
-											</div>
+											</div> *@
 											<div class="col-auto d-flex align-items-center">
 												@if (@t.IsImportant)
 												{
 													<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
 												}
 											</div>
-										</div>
-									</li>
-								}
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="col-4">
-					<div class="card" style="height:700px;max-height: 700px;">
-						<div class="card-header text-center">Uncompleted</div>
-						<div class="card-body overflow-scroll">
-							<ul class="list-group">
-								@foreach (var t in Tasks)
-								{
-									<li class="list-group-item">
-										<div class="row">
-											<div class="col align-content-center text-nowrap text-truncate" title="@t.Title">
-												@t.Title
-											</div>
-											<div class="col-auto">
-												<div class="row flex-column">
-													<div class="col">
-														<small class="text-muted" title="Due Date">@t.DueDate</small>
-													</div>
-													<div class="col">
-														<small class="text-muted" title="Due Time">@t.DueTime</small>
-													</div>
-												</div>
-											</div>
-											<div class="col-auto  d-flex align-items-center">
-												@if (@t.IsImportant)
-												{
-													<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
-												}
+											<div class="col-auto d-flex align-items-center">
+												<form asp-action="ToggleTask" asp-route-id="@t.Id" method="post">
+													<input type="checkbox" name="checkbox" value="true" class="form-check-input" onchange="this.form.submit()"/>
+												</form>
 											</div>
 										</div>
 									</li>
@@ -81,33 +45,35 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-4">
+				<div class="col">
 					<div class="card" style="height:700px;max-height: 700px;">
 						<div class="card-header text-center">Completed</div>
 						<div class="card-body overflow-scroll">
 							<ul class="list-group">
-								@foreach (var t in Tasks)
+								@foreach (var t in ViewBag.Completed)
 								{
 									<li class="list-group-item">
 										<div class="row">
-											<div class="col align-content-center text-nowrap text-truncate" title="@t.Title">
+											<div class="col align-content-center text-nowrap text-truncate text-decoration-line-through text-muted" title="@t.Title">
 												@t.Title
 											</div>
-											<div class="col-auto">
+											@* <div class="col-auto">
 												<div class="row flex-column">
 													<div class="col">
-														<small class="text-muted" title="Due Date">@t.DueDate</small>
-													</div>
-													<div class="col">
-														<small class="text-muted" title="Due Time">@t.DueTime</small>
+														<small class="text-muted" title="Due Date">@t.DueAt</small>
 													</div>
 												</div>
-											</div>
+											</div> *@
 											<div class="col-auto  d-flex align-items-center">
 												@if (@t.IsImportant)
 												{
 													<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
 												}
+											</div>
+											<div class="col-auto d-flex align-items-center">
+												<form asp-action="ToggleTask" asp-route-id="@t.Id" method="post">
+													<input type="checkbox" name="checkbox" checked value="false" class="form-check-input" onchange="this.form.submit()" />
+												</form>
 											</div>
 										</div>
 									</li>

@@ -1,6 +1,8 @@
-﻿
+﻿@inject UserManager<User> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
+
 <div class="row">
-	<div class="card" style="height: 550px;max-height: 550px;margin:0;">
+	<div class="card" style="height: 450px;max-height: 450px;margin:0;">
 		<div class="card-header">Tasks</div>
 		<div class="card-body">
 			<ul class="list-group">
@@ -9,7 +11,53 @@
 					@foreach (var t in ViewBag.Tasks)
 					{
 						<li class="list-group-item">
-
+							<div class="row">
+								@if (t.IsCompleted)
+								{
+									<div class="col align-content-center text-nowrap text-truncate text-decoration-line-through text-muted" title="@t.Title">
+										@t.Title
+									</div>
+								} else {
+									<div class="col align-content-center text-nowrap text-truncate" title="@t.Title">
+										@t.Title
+									</div>
+								}
+								@* <div class="col-auto">
+												<div class="row flex-column">
+													<div class="col">
+														<small class="text-muted" title="Due Date">@t.DueAt</small>
+													</div>
+												</div>
+											</div> *@
+								<div class="col-auto  d-flex align-items-center">
+									@if (@t.IsImportant)
+									{
+										<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
+									}
+								</div>
+								<div class="col-auto d-flex align-items-center">
+									<form asp-action="ClaimTask" asp-route-id="@t.Id" method="post">
+										@{
+											var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
+											var qsPath = ViewContext.HttpContext.Request.QueryString.Value;
+											var returnUrl = $"{routeUrl}{qsPath}";
+										}
+										<input type="hidden" name="Url" value="@returnUrl" />
+										@if (t.UserId == null && !t.IsCompleted)
+										{
+											<button class="btn btn-primary" type="submit">Claim</button>
+										}
+										else if (t.UserId == Convert.ToInt32(UserManager.GetUserId(HttpContextAccessor.HttpContext.User)))
+										{
+											<button class="btn btn-primary" type="submit">Unclaim</button>
+										}
+										else
+										{
+											<button class="btn btn-primary" type="submit" disabled>Claimed</button>
+										}
+									</form>
+								</div>
+							</div>
 						</li>
 					}
 				}
@@ -18,20 +66,32 @@
 	</div>
 </div>
 <div class="row">
-	<div class="card" style="height: 150px;max-height: 150px;">
+	<div class="card" style="height: 250px;max-height: 250px;">
 		<div class="card-header">Members</div>
-		<div class="card-body">
-			<ul class="list-group">
-				@if (ViewBag.Memberships != null)
+		<div class="card-body overflow-x-auto">
+			<div class="list-group row overflow-x-auto">
+				@if (ViewBag.Users != null)
 				{
-					@foreach (var m in ViewBag.Memberships)
+					@foreach (var u in ViewBag.Users)
 					{
-						<li class="list-group-item">
-
-						</li>
+						<div class="list-group-item col d-inline-block">
+							<a asp-action="UserDetails" asp-route-id="@u.Id">
+								<div class="row">
+									<div class="col-auto align-content-center">
+										<img src="~/images/32px-Default_pfp.svg.png" class="card-img" />
+									</div>
+									<div class="col">
+										<h6>@u.DisplayName</h6>
+										<div class="card-text">
+											@u.Email
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
 					}
 				}
-			</ul>
+			</div>
 		</div>
 	</div>
 </div>

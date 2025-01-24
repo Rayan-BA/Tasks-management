@@ -8,6 +8,7 @@ using Final_Project.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace Final_Project.Controllers
 {
@@ -29,18 +30,48 @@ namespace Final_Project.Controllers
 
     public IActionResult Index()
     {
-      ViewBag.DueToday = _DbContext.Task.Where(t => t.DueDate.Equals(DateOnly.FromDateTime(DateTime.Today))).Count();
-      //ViewBag.DueThisWeek
-      ViewBag.TotalTasks = _DbContext.Task.Where(t => !t.IsCompleted).Count();
-      ViewBag.ImportantTasks = _DbContext.Task.Where(t => !t.IsCompleted && t.IsImportant).Count();
-      ViewBag.Tasks = _DbContext.Task.ToList();
+      var tasks = _DbContext.Task.Where(t => t.UserId == _currentUserId);
+      ViewBag.DueToday = tasks.Where(t => t.DueAt.Date.Equals(DateTime.Today.Date)).Count();
+      ViewBag.Overdue = tasks.Where(t => !t.IsCompleted && DateTime.Now.Date > t.DueAt).Count();
+      ViewBag.Uncompleted = tasks.Where(t => !t.IsCompleted).Count();
+      ViewBag.Important = tasks.Where(t => !t.IsCompleted && t.IsImportant).Count();
+      ViewBag.Tasks = tasks.ToList();
       return View();
     }
 
     public IActionResult Tasks()
     {
-      ViewBag.Tasks = _DbContext.Task.ToList();
+      var tasks = _DbContext.Task.Where(t => t.UserId == _currentUserId);
+      ViewBag.Important = tasks.Where(t => t.IsImportant).ToList();
+      ViewBag.Uncompleted = tasks.Where(t => !t.IsCompleted).ToList();
+      ViewBag.Completed = tasks.Where(t => t.IsCompleted).ToList();
       return View();
+    }
+
+    public IActionResult ToggleTask(int Id, bool checkbox)
+    {
+      var task = _DbContext.Task.Find(Id);
+      task.IsCompleted = checkbox;
+      _DbContext.Task.Update(task);
+      _DbContext.SaveChanges();
+      return RedirectToAction("Tasks");
+    }
+
+    public IActionResult ClaimTask(int Id, string Url)
+    {
+      var groupId = Convert.ToInt32(Url.Split("=")[1]);
+      var task = _DbContext.Task.Find(Id);
+      if (task.UserId == _currentUserId)
+      {
+        task.UserId = null;
+      }
+      else if (task.UserId == null)
+      {
+        task.UserId = _currentUserId;
+      }
+      _DbContext.Task.Update(task);
+      _DbContext.SaveChanges();
+      return RedirectToAction("Groups");
     }
 
     public IActionResult Groups(int Id)
@@ -49,12 +80,26 @@ namespace Final_Project.Controllers
       {
         var tasks = _DbContext.Task.Where(t => t.GroupId == Id).ToList();
         var memberships = _DbContext.GroupMemberships.Where(gm => gm.GroupId == Id).ToList();
+        var users = new List<User>();
+        foreach (var m in memberships)
+        {
+          var u = _DbContext.Users.Where(u => u.Id == m.UserId).SingleOrDefault();
+          if (u != null)
+          {
+            users.Add(u);
+          }
+        }
         ViewBag.Tasks = tasks;
-        ViewBag.Memberships = memberships;
+        ViewBag.Users = users;
         return PartialView("~/Views/Home/_Partials/_GroupPartial.cshtml");
       }
-
-      var groups = _DbContext.Group.ToList();
+      var gm = _DbContext.GroupMemberships.Where(gm => gm.UserId == _currentUserId);
+      var groupIds = gm.Select(gm => gm.GroupId).ToList();
+      var groups = new List<Group>();
+      foreach (var gId in groupIds)
+      {
+        groups.Add(_DbContext.Group.Where(g => g.Id == gId).SingleOrDefault());
+      }
       return View(groups);
     }
 
@@ -109,7 +154,8 @@ namespace Final_Project.Controllers
         var manager = _DbContext.Users.Where(m => m.NormalizedEmail == pem.ManagerEmail.ToUpper()).SingleOrDefault();
         if (user.ManagerId != manager.Id)
         {
-          _DbContext.ManagerRequests.Add(new ManagerRequests { 
+          _DbContext.ManagerRequests.Add(new ManagerRequests
+          {
             UserId = user.Id,
             ManagerId = manager.Id,
             IsAccepted = false,
@@ -122,6 +168,30 @@ namespace Final_Project.Controllers
       _DbContext.Users.Update(user);
       _DbContext.SaveChanges();
       return RedirectToAction("Profile");
+    }
+
+    [Route("/Home/ChartData")]
+    public JsonResult ChartDate()
+    {
+      var labels = new List<string>();
+      var data = new List<int>();
+      labels.Add("You");
+      var gm = _DbContext.GroupMemberships.Where(gm => gm.UserId == _currentUserId).ToList();
+      var groups = new List<Group>();
+      foreach (var g in gm)
+      {
+        groups.Add(_DbContext.Group.Find(g.GroupId));
+      }
+      foreach (var g in groups)
+      {
+        labels.Add(g.Name);
+      }
+      data.Add(_DbContext.Task.Where(t => t.UserId == _currentUserId).Count());
+      foreach (var g in groups)
+      {
+        data.Add(_DbContext.Task.Where(t => t.GroupId == g.Id).Count());
+      }
+      return new JsonResult(new { labels, data });
     }
   }
 }
