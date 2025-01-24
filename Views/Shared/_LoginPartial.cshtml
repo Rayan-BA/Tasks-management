@@ -16,7 +16,7 @@
 				<div class="dropdown-menu dropdown-menu-end nav-link-menu">
 					<ul class="nav-list text-dark">
 						<li><a asp-action="Profile" class="dropdown-item text-dark"><i class="fas fa-address-card"></i> Profile</a></li>
-						<li><a href="#" class="dropdown-item text-dark"><i class="fas fa-cog"></i> Settings</a></li>
+						@* <li><a href="#" class="dropdown-item text-dark"><i class="fas fa-cog"></i> Settings</a></li> *@
 						<div class="dropdown-divider"></div>
 						<li>
 							<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
