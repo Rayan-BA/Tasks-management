@@ -30,7 +30,7 @@ namespace Final_Project.Controllers
 
     public async Task<IActionResult> TestUsers()
     {
-      for (int i = 0; i < 10; i++)
+      for (int i = 0; i < 5; i++)
       {
         var user = Activator.CreateInstance<User>();
         user.DisplayName = "user" + DateTime.Now.Microsecond + DateTime.Now.Microsecond;
