@@ -1,22 +1,19 @@
 // file changed.
 
-var total;
-var completed;
-var labels;
+if (window.location.pathname == "/Dashboard") {
+  $.ajax({
+    url: "/Dashboard/ChartData",
+    type: "GET",
+    dataType: "json",
+    success: function (res) {
+      if (res.labels.length > 0) {
+        taskChart(res.labels, res.total, res.completed);
+      }
+    }
+  });
+}
 
-$.ajax({
-  url: "/Dashboard/ChartData",
-  type: "GET",
-  dataType: "json",
-  success: function (res) {
-    total = res.total;
-    completed = res.completed;
-    labels = res.labels;
-    taskChart();
-  }
-});
-
-function taskChart() {
+function taskChart(labels, total, completed) {
   var tasksChart = document.getElementById("tasks-chart");
   tasksChartConfig = {
     type: 'bar',
@@ -47,10 +44,8 @@ function taskChart() {
           }
         },
         y: {
-          min: 0,
-          max: Math.max(total),
           ticks: {
-            stepSize: 50
+            display: false
           }
         },
       },
