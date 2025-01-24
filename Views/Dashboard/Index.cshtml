@@ -1,216 +1,221 @@
-﻿
-@{
-    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+﻿@{
+	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-12 page-header d-flex justify-content-center">
-            <h2 class="page-title">Dashboard</h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
-            <div class="card h-75">
-                <div class="content h-100">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="icon-big text-center">
-                                <i class="fa-solid fa-user-clock"></i>
-                            </div>
-                        </div>
-                        <div class="col-sm-8 d-flex justify-content-center align-items-center">
-                            <div class="detail">
-                                @* <p class="detail-subtitle" title="Incomplete Tasks">Inc. Tasks</p> *@
-                                <div class="row">
-                                    <div class="col d-flex justify-content-center flex-column">
-                                        <h6>Pending User Requests</h6>
-                                        <span class="number text-center">
-                                            @ViewBag.PendingReq
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @* <div class="footer">
+	<div class="row">
+		<div class="col-md-12 page-header d-flex justify-content-center">
+			<h2 class="page-title">Dashboard</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+			<a asp-action="Users">
+			<div class="card h-75">
+				<div class="content h-100">
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="icon-big text-center">
+								<i class="fa-solid fa-user-clock"></i>
+							</div>
+						</div>
+						<div class="col-sm-8 d-flex justify-content-center align-items-center">
+							<div class="detail">
+								@* <p class="detail-subtitle" title="Incomplete Tasks">Inc. Tasks</p> *@
+								<div class="row">
+									<div class="col d-flex justify-content-center flex-column">
+										<h6>Pending User Requests</h6>
+										<span class="number text-center">
+											@ViewBag.PendingReq
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					@* <div class="footer">
                         <div class="stats">
                         </div>
                     </div> *@
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
-            <div class="card h-75">
-                <div class="content h-100">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="icon-big text-center">
-                                <i class="fa-solid fa-list-check"></i>
-                            </div>
-                        </div>
-                        <div class="col-sm-8 d-flex justify-content-center align-items-center">
-                            <div class="detail">
-                                @* <p class="detail-subtitle" title="Incomplete Tasks">Inc. Tasks</p> *@
-                                <div class="row">
-                                    <div class="col d-flex justify-content-center flex-column">
-                                        <h6>Uncompleted Tasks</h6>
-                                        <span class="number text-center">
-                                            @ViewBag.Uncompleted
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @* <div class="footer">
+				</div>
+			</div>
+			</a>
+		</div>
+		<div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+			<div class="card h-75">
+				<div class="content h-100">
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="icon-big text-center">
+								<i class="fa-solid fa-list-check"></i>
+							</div>
+						</div>
+						<div class="col-sm-8 d-flex justify-content-center align-items-center">
+							<div class="detail">
+								@* <p class="detail-subtitle" title="Incomplete Tasks">Inc. Tasks</p> *@
+								<div class="row">
+									<div class="col d-flex justify-content-center flex-column">
+										<h6>Uncompleted Tasks</h6>
+										<span class="number text-center">
+											@ViewBag.Uncompleted
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					@* <div class="footer">
                         <div class="stats">
                         </div>
                     </div> *@
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
-            <div class="card h-75">
-                <div class="content h-100">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="icon-big text-center">
-                                <i class="fa-solid fa-hourglass-end"></i>
-                            </div>
-                        </div>
-                        <div class="col-sm-8 d-flex justify-content-center align-items-center">
-                            <div class="detail">
-                                @* <p class="detail-subtitle" title="Incomplete Tasks">Inc. Tasks</p> *@
-                                <div class="row">
-                                    <div class="col d-flex justify-content-center flex-column">
-                                        <h6>Overdue Tasks</h6>
-                                        <span class="number text-center">
-                                            @ViewBag.Overdue
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @* <div class="footer">
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+			<div class="card h-75">
+				<div class="content h-100">
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="icon-big text-center">
+								<i class="fa-solid fa-hourglass-end"></i>
+							</div>
+						</div>
+						<div class="col-sm-8 d-flex justify-content-center align-items-center">
+							<div class="detail">
+								@* <p class="detail-subtitle" title="Incomplete Tasks">Inc. Tasks</p> *@
+								<div class="row">
+									<div class="col d-flex justify-content-center flex-column">
+										<h6>Overdue Tasks</h6>
+										<span class="number text-center">
+											@ViewBag.OverdueCount
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					@* <div class="footer">
                         <div class="stats">
                         </div>
                     </div> *@
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
-            <div class="card h-75">
-                <div class="content h-100">
-                    <div class="row">
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+			<div class="card h-75">
+				<div class="content h-100">
+					<div class="row">
 
-                        <div class="col-sm-8 d-flex justify-content-center align-items-center w-100">
-                            <div class="detail w-100">
-                                @* <p class="detail-subtitle" title="Incomplete Tasks">Inc. Tasks</p> *@
-                                <div class="row">
-                                    <div class="col d-flex justify-content-center flex-column">
-                                        <h6>Week Progress</h6>
-                                        <div class="progress" role="progressbar">
-                                            <div class="progress-bar bg-success" id="progress" style="width: @ViewBag.WeekProgress%">
-                                                @ViewBag.WeekProgress%
-                                            </div>
-                                        </div>
+						<div class="col-sm-8 d-flex justify-content-center align-items-center w-100">
+							<div class="detail w-100">
+								@* <p class="detail-subtitle" title="Incomplete Tasks">Inc. Tasks</p> *@
+								<div class="row">
+									<div class="col d-flex justify-content-center flex-column">
+										<h6>Completion Progress</h6>
+										<div class="progress" role="progressbar">
+											<div class="progress-bar bg-success" id="progress" style="width: @ViewBag.Progress%">
+												@ViewBag.Progress%
+											</div>
+										</div>
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @* <div class="footer">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					@* <div class="footer">
                         <div class="stats">
                         </div>
                     </div> *@
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="row">
-                      <div class="col">
-                            <div class="card" style="height: 400px;max-height: 400px;">
-                                <div class="card-header">Close to deadline</div>
-                                <div class="card-body">
-                                    <ul class="list-group">
-                                        @* @foreach (var t in ViewBag.Tasks)
-                                        {
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col text-nowrap text-truncate" title="@t.Title">
-                                                        @t.Title
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <small class="text-muted" title="Due Date">@t.DueDate</small> <small class="text-muted" title="Due Time">@t.DueTime</small>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        @if (@t.IsImportant)
-                                                        {
-                                                            <span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        } *@
-                                    </ul>
-                                </div>
-                            </div>
-                      </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col">
-                            <div class="card" style="height: 400px;max-height: 400px;">
-                                <div class="card-header">Overdue</div>
-                                <div class="card-body">
-                                    <ul class="list-group">
-                                        @* @foreach (var t in ViewBag.Tasks)
-                                        {
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col text-nowrap text-truncate" title="@t.Title">
-                                                        @t.Title
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <small class="text-muted" title="Due Date">@t.DueDate</small> <small class="text-muted" title="Due Time">@t.DueTime</small>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        @if (@t.IsImportant)
-                                                        {
-                                                            <span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        } *@
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card" style="height: 400px;max-height: 400px;" >
-                        @* <div class="content"> *@
-                            <div class="card-header">
-                                Task Completion Overview
-                            </div>
-                            <div class="canvas-wrapper">
-                                <canvas class="chart" id="tasks-chart"></canvas>
-                            </div>
-                        @* </div> *@
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-3">
+					<div class="row">
+						<div class="col">
+							<div class="card" style="height: 400px;max-height: 400px;">
+								<div class="card-header">1 day away from deadline</div>
+								<div class="card-body">
+									<ul class="list-group">
+										@foreach (var t in ViewBag.CloseDeadline)
+										{
+											<li class="list-group-item">
+												<a asp-action="TaskDetails" asp-route-id="@t.Id">
+													<div class="row">
+														<div class="col text-nowrap text-truncate" title="@t.Title">
+															@t.Title
+														</div>
+														<div class="col-auto">
+															@* <small class="text-muted" title="Due Date">@t.DueAt</small> *@
+														</div>
+														<div class="col-auto">
+															@if (@t.IsImportant)
+															{
+																<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
+															}
+														</div>
+													</div>
+												</a>
+											</li>
+										}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="row">
+						<div class="col">
+							<div class="card" style="height: 400px;max-height: 400px;">
+								<div class="card-header">Overdue</div>
+								<div class="card-body">
+									<ul class="list-group">
+										@foreach (var t in ViewBag.Overdue)
+										{
+											<li class="list-group-item">
+												<a asp-action="TaskDetails" asp-route-id="@t.Id">
+													<div class="row">
+														<div class="col text-nowrap text-truncate" title="@t.Title">
+															@t.Title
+														</div>
+														<div class="col-auto">
+															@* <small class="text-muted" title="Due Date">@t.DueAt</small> *@
+														</div>
+														<div class="col-auto">
+															@if (@t.IsImportant)
+															{
+																<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
+															}
+														</div>
+													</div>
+												</a>
+											</li>
+										}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card" style="height: 400px;max-height: 400px;">
+						@* <div class="content"> *@
+						<div class="card-header">
+							Task Completion Overview
+						</div>
+						<div class="canvas-wrapper">
+							<canvas class="chart" id="tasks-chart"></canvas>
+						</div>
+						@* </div> *@
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div>

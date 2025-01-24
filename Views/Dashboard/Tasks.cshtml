@@ -1,4 +1,4 @@
-﻿@* @model TaskModel; *@
+﻿@model TaskModel;
 
 @{
 	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
@@ -25,7 +25,8 @@
 								<div class="row align-items-end">
 									<div class="col">
 										<label class="form-label">Title</label>
-										<input type="text" name="Title" class="form-control" />
+										<input type="text" name="Title" class="form-control"  required/>
+										<span asp-validation-for="@Model.Title" class="text-danger"></span>
 									</div>
 									<div class="col">
 										<label class="from-label">Assign to user</label>
@@ -57,12 +58,12 @@
 								<div class="row">
 									<div class="col">
 										<label class="form-label">Due Date</label>
-										<input type="date" name="DueDate" class="form-control" />
+										<input type="datetime-local" name="DueAt" class="form-control" required />
 									</div>
-									<div class="col">
-										<label class="form-label">Due Time</label>
-										<input type="time" name="DueTime" class="form-control" />
-									</div>
+									@* <div class="col"> *@
+									@* 	<label class="form-label">Due Time</label> *@
+									@* 	<input type="time" name="DueTime" class="form-control" /> *@
+									@* </div> *@
 								</div>
 								<div class="row py-2">
 									<div class="col d-flex justify-content-center">
@@ -105,7 +106,4 @@
 			</div>
 		</div>
 	</div>
-
-
-
 </div>

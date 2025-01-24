@@ -1,0 +1,105 @@
+﻿@model Group
+
+@{
+	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-md-9">
+			<div class="row">
+				<div class="col page-header d-flex justify-content-center">
+					<h2 class="page-title">Group Details</h2>
+				</div>
+			</div>
+
+			<div class="row flex-column align-content-center mt-3">
+				<div class="col">
+					<div class="card">
+						@* <div class="card-header text-center">User</div> *@
+						<div class="card-body">
+							<div class="row justify-content-center">
+								<div class="col-6">
+									<label class="form-label">Name</label>
+									<label class="form-control">@Model.Name</label>
+								</div>
+							</div>
+							<div class="row justify-content-center">
+								<div class="col-6">
+									<label class="form-label">Description</label>
+									<label class="form-control">@Model.Description</label>
+								</div>
+							</div>
+
+							@* <div class="row mt-3">
+								<div class="col d-flex justify-content-center gap-3">
+									<button class="btn btn-danger" type="button" onclick="$('#del_modal').toggle()">Remove</button>
+								</div>
+							</div> *@
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mt-3">
+				<div class="col">
+					<div class="card" style="height: 400px;max-height: 400px;">
+						<div class="card-header">Users</div>
+						<div class="card-body">
+							<ul class="list-group">
+								@foreach (var u in ViewBag.Users)
+								{
+									@if (u != null)
+									{
+										<li class="list-group-item">
+											<a asp-action="UserDetails" asp-route-id="@u.Id">
+												<div class="row">
+													<div class="col text-nowrap text-truncate">
+														@u.DisplayName
+													</div>
+												</div>
+											</a>
+										</li>
+									}
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="card" style="height: 400px;max-height: 400px;">
+						<div class="card-header">Tasks</div>
+						<div class="card-body">
+							<ul class="list-group">
+								@foreach (var t in ViewBag.Tasks)
+								{
+									@if (t != null)
+									{
+										<li class="list-group-item">
+											<a asp-action="TaskDetails" asp-route-id="@t.Id">
+												<div class="row">
+													<div class="col text-nowrap text-truncate" title="@t.Title">
+														@t.Title
+													</div>
+													<div class="col-auto">
+														@* <small class="text-muted" title="Due Date">@t.DueAt</small> *@
+													</div>
+													<div class="col-auto">
+														@if (@t.IsImportant)
+														{
+															<span title="Important"><i class="fas fa-exclamation" style="color:red"></i></span>
+														}
+													</div>
+												</div>
+											</a>
+										</li>
+									}
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

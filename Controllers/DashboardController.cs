@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Final_Project.Controllers
 {
@@ -16,23 +17,55 @@ namespace Final_Project.Controllers
     private readonly UserManager<User> _userManager;
     private readonly int _currentUserId;
 
-    public DashboardController(ApplicationDbContext context, IHttpContextAccessor httpContext, UserManager<User> userManager)
+    private readonly IUserStore<User> _userStore;
+
+    public DashboardController(ApplicationDbContext context, IHttpContextAccessor httpContext, UserManager<User> userManager, IUserStore<User> userStore)
     {
       _DbContext = context;
       _httpContext = httpContext;
       _userManager = userManager;
-      _currentUserId = Convert.ToInt32(_userManager.GetUserId(httpContext.HttpContext.User)); // uncomment later
+      _currentUserId = Convert.ToInt32(_userManager.GetUserId(httpContext.HttpContext.User));
+      _userStore = userStore;
+    }
+
+    public async Task<IActionResult> TestUsers()
+    {
+      for (int i = 0; i < 10; i++)
+      {
+        var user = Activator.CreateInstance<User>();
+        user.DisplayName = "user" + DateTime.Now.Microsecond + DateTime.Now.Microsecond;
+        await _userStore.SetUserNameAsync(user, user.DisplayName, CancellationToken.None);
+        await _userManager.CreateAsync(user, "Password1!");
+        _DbContext.ManagerRequests.Add(new ManagerRequests { 
+          UserId = user.Id, ManagerId = _currentUserId, IsAccepted = false,  IsPending = true
+        });
+        _DbContext.SaveChanges();
+      }
+      return RedirectToAction("Index");
     }
 
     public IActionResult Index()
     {
+      var dt = DateTime.Now;
+      var tasks = _DbContext.Task.Where(t => t.AssignerId == _currentUserId);
       ViewBag.PendingReq = _DbContext.ManagerRequests.Where(r => r.ManagerId == _currentUserId && r.IsPending).Count();
-      ViewBag.Uncompleted = _DbContext.Task.Where(t => t.AssignerId == _currentUserId && !t.IsCompleted).Count();
-      ViewBag.Overdue = _DbContext.Task.Where(t => 
-          t.AssignerId == _currentUserId && !t.IsCompleted).Count();
-      var completed = _DbContext.Task.Where(t => t.AssignerId == _currentUserId && t.IsCompleted).Count();
-      var total = _DbContext.Task.Where(t => t.AssignerId == _currentUserId).Count();
-      ViewBag.WeekProgress = Convert.ToInt32(completed / total);
+      ViewBag.Uncompleted = tasks.Where(t => !t.IsCompleted).Count();
+      var overdue = tasks.Where(t => !t.IsCompleted && dt.Date > t.DueAt);
+      ViewBag.Overdue = overdue.ToList();
+      ViewBag.OverdueCount = overdue.Count();
+      ViewBag.CloseDeadline = tasks.Where(t => t.DueAt.Day - dt.Date.Day <= 1 && t.DueAt.Day - dt.Date.Day > 0).ToList();
+      var total = tasks.Count();
+      var completed = tasks.Where(t => t.IsCompleted).Count();
+
+      float ratio = (completed / (float)total) * 100;
+      if (total == 0)
+      {
+        ViewBag.Progress = 0;
+      }
+      else
+      {
+        ViewBag.Progress = ratio.ToString("0.00");
+      }
       return View();
     }
 
@@ -66,10 +99,13 @@ namespace Final_Project.Controllers
 
     public IActionResult CreateTask(TaskModel task)
     {
-      task.AssignerId = Convert.ToInt32(_userManager.GetUserId(HttpContext.User));
-      task.CreatedAt = DateTime.Now;
-      _DbContext.Task.Add(task);
-      _DbContext.SaveChanges();
+      if (ModelState.IsValid)
+      {
+        task.AssignerId = Convert.ToInt32(_userManager.GetUserId(HttpContext.User));
+        task.CreatedAt = DateTime.Now;
+        _DbContext.Task.Add(task);
+        _DbContext.SaveChanges();
+      }
       return RedirectToAction("Tasks");
     }
 
@@ -120,12 +156,35 @@ namespace Final_Project.Controllers
       var users = _DbContext.Users.Where(u => u.ManagerId == _currentUserId).ToList();
       var requests = _DbContext.ManagerRequests.Where(r => r.ManagerId == _currentUserId && r.IsPending).ToList();
       var requestingUsers = new List<User>();
-      requests.ForEach(req => {
+      requests.ForEach(req =>
+      {
         var u = _DbContext.Users.Where(u => u.Id == req.UserId).SingleOrDefault();
         if (u != null) requestingUsers.Add(u);
       });
       ViewBag.ReqUsers = requestingUsers;
       return View(users);
+    }
+
+    public IActionResult UserDetails(int Id)
+    {
+      var user = _DbContext.Users.Find(Id);
+      var groupIds = _DbContext.GroupMemberships.Where(gm => gm.UserId == Id).Select(gm => gm.GroupId).ToList();
+      var groups = new List<Group>();
+      groupIds.ForEach(groupId =>
+          groups.Add(_DbContext.Group.Where(g => g.Id == groupId && g.ManagerId == _currentUserId).Single())
+      );
+      ViewBag.Groups = groups;
+      ViewBag.Tasks = _DbContext.Task.Where(t => t.UserId == Id).ToList();
+      return View(user);
+    }
+
+    public IActionResult RemoveUser(int Id)
+    {
+      var user = _DbContext.Users.Find(Id);
+      user.ManagerId = null;
+      _DbContext.Users.Update(user);
+      _DbContext.SaveChanges();
+      return RedirectToAction("Users");
     }
 
     public IActionResult AcceptRequest(int Id)
@@ -159,16 +218,32 @@ namespace Final_Project.Controllers
 
     public IActionResult CreateGroup(Group group, List<string> users)
     {
-      group.CreatedAt = DateTime.Now;
-      group.ManagerId = _currentUserId;
-      _DbContext.Group.Add(group);
-      _DbContext.SaveChanges();
-      foreach (var userId in users)
+      if (ModelState.IsValid)
       {
-        _DbContext.GroupMemberships.Add(new GroupMemberships() { GroupId = group.Id, UserId = Convert.ToInt32(userId) });
+        group.CreatedAt = DateTime.Now;
+        group.ManagerId = _currentUserId;
+        _DbContext.Group.Add(group);
+        _DbContext.SaveChanges();
+        foreach (var userId in users)
+        {
+          _DbContext.GroupMemberships.Add(new GroupMemberships() { GroupId = group.Id, UserId = Convert.ToInt32(userId) });
+        }
+        _DbContext.SaveChanges();
       }
-      _DbContext.SaveChanges();
       return RedirectToAction("Groups");
+    }
+
+    public IActionResult GroupDetails(int Id)
+    {
+      var group = _DbContext.Group.Find(Id);
+      var userIds = _DbContext.GroupMemberships.Where(gm => gm.GroupId == Id).Select(gm => gm.UserId).ToList();
+      var users = new List<User>();
+      userIds.ForEach(Id =>
+          users.Add(_DbContext.Users.Where(u => u.Id == Id && u.ManagerId == _currentUserId).SingleOrDefault())
+      );
+      ViewBag.Users = users;
+      ViewBag.Tasks = _DbContext.Task.Where(t => t.GroupId == Id).ToList();
+      return View(group);
     }
 
   }

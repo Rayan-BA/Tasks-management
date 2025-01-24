@@ -22,7 +22,7 @@
 								<div class="row align-items-end">
 									<div class="col">
 										<label class="form-label">Name</label>
-										<input name="Name" class="form-control" />
+										<input name="Name" class="form-control" required/>
 									</div>
 								</div>
 								<div class="row">
@@ -58,24 +58,20 @@
 					<div class="card">
 						<div class="card-header text-center">Registered Groups</div>
 						<div class="card-body">
-							<div class="list-group">
-
-								@foreach (var g in Groups)
+							<ul class="list-group">
+								@foreach (var g in ViewBag.Groups)
 								{
-									<a class="list-group-item list-group-item-action" aria-current="true">
-										<div class="row">
-											<div class="col">
-												<div class="d-flex w-100 justify-content-between">
-													<h5 class="mb-1">@g.Name</h5>
-													@* <small>@g.CreatedAt</small> *@
+									<li class="list-group-item">
+										<a asp-action="GroupDetails" asp-route-id="@g.Id">
+											<div class="row">
+												<div class="col text-nowrap text-truncate" title="@g.Name">
+													@g.Name
 												</div>
-												<p class="mb-1">@g.Description</p>
 											</div>
-										</div>
-									</a>
+										</a>
+									</li>
 								}
-
-							</div>
+							</ul>
 						</div>
 					</div>
 				</div>

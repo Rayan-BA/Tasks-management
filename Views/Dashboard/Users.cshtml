@@ -22,23 +22,19 @@
 								@foreach (var u in ViewBag.ReqUsers)
 								{
 									<div class="list-group-item list-group-item-action">
-										@* <div class="card"> *@
 										<div class="row">
 											<div class="col-auto align-content-center">
 												<img src="~/images/64px-Default_pfp.svg.png" class="card-img img-fluid" />
 											</div>
 											<div class="col">
-												@* <div class="card-body"> *@
 												<h6>@u.DisplayName</h6>
 												<div class="card-text">
 													@u.Email
 												</div>
-												@* </div> *@
 											</div>
-											@* </div> *@
 											<div class="col d-flex align-items-center justify-content-end gap-2">
-														<a href="#" class="" onclick="acceptReq(@u.Id)" title="Accept"><i class="fa-solid fa-circle-check fs-2" style="color:green;"></i></a>
-														<a href="#" class="" onclick="rejectReq(@u.Id)" title="Reject"><i class="fa-solid fa-circle-xmark fs-2" style="color:red;"></i></a>
+												<a href="#" class="" onclick="acceptReq(@u.Id)" title="Accept"><i class="fa-solid fa-circle-check fs-2" style="color:green;"></i></a>
+												<a href="#" class="" onclick="rejectReq(@u.Id)" title="Reject"><i class="fa-solid fa-circle-xmark fs-2" style="color:red;"></i></a>
 											</div>
 										</div>
 									</div>
@@ -51,33 +47,30 @@
 					<div class="card" style="height:700px;max-height:700px;">
 						<div class="card-header text-center">My Staff</div>
 						<div class="card-body overflow-scroll">
-							<div class="list-group">
+							<ul class="list-group">
 								@foreach (var u in Model)
 								{
-									<a class="list-group-item list-group-item-action" aria-current="true">
-										@* <div class="card"> *@
-										<div class="row">
-											<div class="col-auto align-content-center">
-												<img src="~/images/64px-Default_pfp.svg.png" class="card-img img-fluid" />
-											</div>
-											<div class="col">
-												@* <div class="card-body"> *@
-												<h6>@u.DisplayName</h6>
-												<div class="card-text">
-													@u.Email
+									<li class="list-group-item">
+										<a asp-action="UserDetails" asp-route-id="@u.Id">
+											<div class="row">
+												<div class="col-auto align-content-center">
+													<img src="~/images/64px-Default_pfp.svg.png" class="card-img" />
 												</div>
-												@* </div> *@
+												<div class="col">
+													<h6>@u.DisplayName</h6>
+													<div class="card-text">
+														@u.Email
+													</div>
+												</div>
 											</div>
-											@* </div> *@
-										</div>
-									</a>
+										</a>
+									</li>
 								}
-							</div>
+							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
 </div>
