@@ -6,7 +6,7 @@ if (window.location.pathname == "/") {
     type: "GET",
     dataType: "json",
     success: function (res) {
-      if (res.labels.data > 0) {
+      if (res.data.length > 0) {
         doughnutchart(res.labels, res.data);
       } else {
         $(".canvas-wrapper").append("<p class='text-center text-muted'>No Data</p>")

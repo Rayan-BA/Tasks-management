@@ -156,9 +156,18 @@
 								{
 									<li class="list-group-item">
 										<div class="row">
-											<div class="col text-nowrap text-truncate" title="@t.Title">
-												@t.Title
-											</div>
+											@if (t.IsCompleted)
+											{
+												<div class="col align-content-center text-nowrap text-truncate text-decoration-line-through text-muted" title="@t.Title">
+													@t.Title
+												</div>
+											}
+											else
+											{
+												<div class="col align-content-center text-nowrap text-truncate" title="@t.Title">
+													@t.Title
+												</div>
+											}
 											<div class="col-auto">
 												<small class="text-muted" title="Due Date">@t.DueAt</small>
 											</div>
