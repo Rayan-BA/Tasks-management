@@ -22,7 +22,8 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="navbar-collapse collapse d-sm-inline-flex">
-					<div class="col"></div>
+					<div class="col">
+					</div>
 					<ul class="navbar-nav flex-grow-1 align-items-center justify-content-around">
 						<li class="nav-item">
 							<a class="nav-link text-dark fs-5" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Home</a>
@@ -33,7 +34,7 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark fs-5" asp-area="" asp-controller="Home" asp-action="Groups"><i class="fas fa-user-friends"></i> Groups</a>
 						</li>
-						<partial name="_LoginPartial.cshtml"/>
+						<partial name="_LoginPartial.cshtml" />
 					</ul>
 					<div class="col"></div>
 				</div>
@@ -58,7 +59,7 @@
 	<script src="~/assets/js/charts.js"></script>
 	<script src="~/assets/js/script.js"></script>
 	<script src="~/js/home.js"></script>
-	
+
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

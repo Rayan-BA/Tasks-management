@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Final_Project.FormModels;
 
 namespace Final_Project.Controllers
 {
@@ -244,6 +245,53 @@ namespace Final_Project.Controllers
       ViewBag.Users = users;
       ViewBag.Tasks = _DbContext.Task.Where(t => t.GroupId == Id).ToList();
       return View(group);
+    }
+
+    public IActionResult Profile()
+    {
+      var user = _DbContext.Users.Find(_currentUserId);
+      if (user.Image != null)
+      {
+        var b64 = Convert.ToBase64String(user.Image);
+        ViewBag.Image = string.Format("data:image/png;base64," + b64);
+      }
+      return View(user);
+    }
+
+    public IActionResult EditProfile()
+    {
+      var user = _DbContext.Users.Find(_currentUserId);
+      ViewBag.DisplayName = user.DisplayName;
+      //ViewBag.Id = user.Id;
+      if (user.Image != null)
+      {
+        var b64 = Convert.ToBase64String(user.Image);
+        ViewBag.Image = string.Format("data:image/png;base64," + b64);
+      }
+      return View();
+    }
+
+    public IActionResult UpdateProfile(ProfileEditModel pem)
+    {
+      var user = _DbContext.Users.Find(_currentUserId);
+
+      if (pem.Image != null)
+      {
+        using (var memoryStream = new MemoryStream())
+        {
+          pem.Image.CopyToAsync(memoryStream);
+
+          // Upload the file if less than 2 MB
+          if (memoryStream.Length < 2097152 && memoryStream.Length > 0 && (pem.Image.ContentType == "image/png" || pem.Image.ContentType == "image/jpeg"))
+          {
+            user.Image = memoryStream.ToArray();
+          }
+        }
+      }
+      user.DisplayName = pem.DisplayName;
+      _DbContext.Users.Update(user);
+      _DbContext.SaveChanges();
+      return RedirectToAction("Profile");
     }
 
   }

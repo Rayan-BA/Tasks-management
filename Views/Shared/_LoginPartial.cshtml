@@ -6,12 +6,29 @@
 @inject UserManager<User> UserManager
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
+	@if (SignInManager.IsSignedIn(User))
+	{
 		<li class="nav-item dropdown">
 			<div class="nav-dropdown">
 				<a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
-					<img src="~/images/32px-Default_pfp.svg.png" alt="Alternate Text" /> <span>@UserManager.GetUserAsync(User).Result.DisplayName</span> <i style="font-size: .8em;" class="fas fa-caret-down"></i>
+					@{
+						var user = @UserManager.GetUserAsync(User);
+						string image = null;
+						if (user.Result.Image != null)
+						{
+							var imgB64 = Convert.ToBase64String(user.Result.Image);
+							image = string.Format("data:image/png;base64," + imgB64);
+						}
+					}
+					@if (image == null)
+					{
+						<img src="~/images/32px-Default_pfp.svg.png" alt="Profile image" />
+					}
+					else {
+						<img src="@image" alt="Profile image" width="32px" height="32px" />
+					}
+					<span>@user.Result.DisplayName</span>
+					<i style="font-size: .8em;" class="fas fa-caret-down"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-end nav-link-menu">
 					<ul class="nav-list text-dark">
@@ -27,7 +44,7 @@
 				</div>
 			</div>
 		</li>
-    @* <li class="nav-item">
+		@* <li class="nav-item">
         <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
     </li>
     <li class="nav-item">
@@ -35,14 +52,14 @@
             <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
         </form>
     </li> *@
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+	}
+	else
+	{
+		<li class="nav-item">
+			<a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+		</li>
+	}
 </ul>

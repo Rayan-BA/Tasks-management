@@ -6,6 +6,7 @@ using Final_Project.Data;
 using Final_Project.FormModels;
 using Final_Project.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
@@ -106,11 +107,11 @@ namespace Final_Project.Controllers
     public IActionResult Profile()
     {
       var user = _DbContext.Users.Find(_currentUserId);
-      //if (user.Image != null)
-      //{
-      //  var b64 = Convert.ToBase64String(user.Image);
-      //  ViewBag.Image = string.Format("data:image/png,base64," + b64 + ");");
-      //}
+      if (user.Image != null)
+      {
+        var b64 = Convert.ToBase64String(user.Image);
+        ViewBag.Image = string.Format("data:image/png;base64," + b64);
+      }
       ViewBag.ManagerEmail = _DbContext.Users.Where(m => m.Id == user.ManagerId).SingleOrDefault();
       var pendingReq = _DbContext.ManagerRequests.Where(mr => mr.IsPending && mr.UserId == user.Id).SingleOrDefault();
       if (pendingReq != null)
@@ -125,33 +126,37 @@ namespace Final_Project.Controllers
     {
       var user = _DbContext.Users.Find(_currentUserId);
       ViewBag.DisplayName = user.DisplayName;
-      ViewBag.Id = user.Id;
+      //ViewBag.Id = user.Id;
+      if (user.Image != null)
+      {
+        var b64 = Convert.ToBase64String(user.Image);
+        ViewBag.Image = string.Format("data:image/png;base64," + b64);
+      }
       ViewBag.ManagerEmail = _DbContext.Users.Where(m => m.Id == user.ManagerId).SingleOrDefault();
       return View();
     }
 
-    public IActionResult UpdateProfile(ProfileEditModel pem, IFormFile img)
+    public IActionResult UpdateProfile(ProfileEditModel pem)
     {
       var user = _DbContext.Users.Find(_currentUserId);
 
-      //using (var memoryStream = new MemoryStream())
-      //{
-      //  img.CopyToAsync(memoryStream);
+      if (pem.Image != null)
+      {
+        using (var memoryStream = new MemoryStream())
+        {
+          pem.Image.CopyToAsync(memoryStream);
 
-      //  // Upload the file if less than 2 MB
-      //  if (memoryStream.Length < 2097152 && memoryStream.Length> 0 && (img.ContentType == "image/png" || img.ContentType == "image/jpeg"))
-      //  {
-      //    user.Image = memoryStream.ToArray();
-      //    _DbContext.Users.Update(user);
-      //    _DbContext.SaveChanges();
-      //  }
-      //}
-      //_DbContext.Users.Where(u => u.NormalizedEmail == user.Mana)
-      //_DbContext.Users.Update(user);
+          // Upload the file if less than 2 MB
+          if (memoryStream.Length < 2097152 && memoryStream.Length > 0 && (pem.Image.ContentType == "image/png" || pem.Image.ContentType == "image/jpeg"))
+          {
+            user.Image = memoryStream.ToArray();
+          }
+        }
+      }
       user.DisplayName = pem.DisplayName;
       if (pem.ManagerEmail != null)
       {
-        var manager = _DbContext.Users.Where(m => m.NormalizedEmail == pem.ManagerEmail.ToUpper()).SingleOrDefault();
+        var manager = _DbContext.Users.Where(m => m.NormalizedEmail == pem.ManagerEmail.Trim().ToUpper()).SingleOrDefault();
         if (user.ManagerId != manager.Id)
         {
           _DbContext.ManagerRequests.Add(new ManagerRequests
@@ -163,7 +168,6 @@ namespace Final_Project.Controllers
             CreatedAt = DateTime.Now
           });
         }
-        //user.ManagerId = manager.Id;
       }
       _DbContext.Users.Update(user);
       _DbContext.SaveChanges();

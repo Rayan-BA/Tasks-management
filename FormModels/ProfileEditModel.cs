@@ -10,5 +10,6 @@ namespace Final_Project.FormModels
     [Required]
     [EmailAddress]
     public string ManagerEmail { get; set; }
+    public IFormFile Image { get; set; }
   }
 }

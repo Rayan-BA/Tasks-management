@@ -17,7 +17,9 @@
 									<div class="col align-content-center text-nowrap text-truncate text-decoration-line-through text-muted" title="@t.Title">
 										@t.Title
 									</div>
-								} else {
+								}
+								else
+								{
 									<div class="col align-content-center text-nowrap text-truncate" title="@t.Title">
 										@t.Title
 									</div>
@@ -53,7 +55,7 @@
 										}
 										else
 										{
-											<button class="btn btn-primary" type="submit" disabled>Claimed</button>
+											<button class="btn btn-secondary" type="submit" disabled>Claimed</button>
 										}
 									</form>
 								</div>
@@ -75,19 +77,17 @@
 					@foreach (var u in ViewBag.Users)
 					{
 						<div class="list-group-item col d-inline-block">
-							<a asp-action="UserDetails" asp-route-id="@u.Id">
-								<div class="row">
-									<div class="col-auto align-content-center">
-										<img src="~/images/32px-Default_pfp.svg.png" class="card-img" />
-									</div>
-									<div class="col">
-										<h6>@u.DisplayName</h6>
-										<div class="card-text">
-											@u.Email
-										</div>
+							<div class="row">
+								<div class="col-auto align-content-center">
+									<img src="~/images/64px-Default_pfp.svg.png" class="card-img" />
+								</div>
+								<div class="col">
+									<h6>@u.DisplayName</h6>
+									<div class="card-text">
+										@u.Email
 									</div>
 								</div>
-							</a>
+							</div>
 						</div>
 					}
 				}

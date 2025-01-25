@@ -3,3 +3,16 @@
   position: relative;
   padding: .5rem;
 }
+
+#pfp {
+  width: 128px;
+  height: 128px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+  #pfp:hover {
+    cursor: pointer;
+  }

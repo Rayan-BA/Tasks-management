@@ -16,18 +16,21 @@
 							<ul class="list-group" id="groups-list">
 								@foreach (var g in Model)
 								{
-									<li class="list-group-item">
-										<a href="#" onclick="loadGroup(@g.Id, this.parentElement)">
-											<div class="row">
-												<div class="col">
-													<span>@g.Name</span>
+									@if (g != null)
+									{
+										<li class="list-group-item">
+											<a href="#" onclick="loadGroup(@g.Id, this.parentElement)">
+												<div class="row">
+													<div class="col">
+														<span>@g.Name</span>
+													</div>
+													<div class="col-auto">
+														<i class="fas fa-angle-right"></i>
+													</div>
 												</div>
-												<div class="col-auto">
-													<i class="fas fa-angle-right"></i>
-												</div>
-											</div>
-										</a>
-									</li>
+											</a>
+										</li>
+									}
 								}
 							</ul>
 						</div>

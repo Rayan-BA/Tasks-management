@@ -22,6 +22,7 @@
 							<form asp-action="UpdateTask" method="post" id="myform">
 								<input type="hidden" asp-for="@Model.Id" />
 								<input type="hidden" asp-for="@Model.AssignerId" />
+								<input type="hidden" asp-for="@Model.CreatedAt" />
 								<div class="row align-items-end">
 									<div class="col">
 										<label class="form-label">Title</label>
@@ -30,7 +31,7 @@
 									<div class="col">
 										<label class="from-label">Assigned user</label>
 										<select asp-for="@Model.UserId" class="form-select input">
-											<option value="" disabled selected>Select user</option>
+											<option selected></option>
 											@foreach (var u in Users)
 											{
 												<option value=@u.Id>@u.DisplayName</option>
@@ -40,7 +41,7 @@
 									<div class="col">
 										<label class="from-label">Assigned group</label>
 										<select asp-for="@Model.GroupId" class="form-select input">
-											<option value="" disabled selected>Select group</option>
+											<option selected></option>
 											@foreach (var g in Groups)
 											{
 												<option value=@g.Id>@g.Name</option>
