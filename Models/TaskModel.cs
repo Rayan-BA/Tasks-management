@@ -12,7 +12,7 @@ namespace Final_Project.Models
     [Required]
     public required string Title { get; set; }
     public string? Description { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime DueAt { get; set; }
     public bool IsCompleted { get; set; }
     public bool IsImportant { get; set; }
