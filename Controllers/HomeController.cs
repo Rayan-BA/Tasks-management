@@ -1,15 +1,9 @@
-using System.Diagnostics;
-using System.IO.Compression;
-
-//using Final_Project.Areas.Identity.Data;
 using Final_Project.Data;
 using Final_Project.FormModels;
 using Final_Project.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace Final_Project.Controllers
 {
@@ -17,74 +11,90 @@ namespace Final_Project.Controllers
   {
 
     private readonly ApplicationDbContext _DbContext;
-    private readonly IHttpContextAccessor _httpContext;
+    private readonly IHttpContextAccessor _httpContextAccerssor;
     private readonly UserManager<User> _userManager;
-    private readonly int _currentUserId;
 
-    public HomeController(ApplicationDbContext context, IHttpContextAccessor httpContext, UserManager<User> userManager)
+    public HomeController(ApplicationDbContext DbContext, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
     {
-      _DbContext = context;
-      _httpContext = httpContext;
+      _DbContext = DbContext;
+      _httpContextAccerssor = httpContextAccessor;
       _userManager = userManager;
-      _currentUserId = Convert.ToInt32(_userManager.GetUserId(httpContext.HttpContext.User));
     }
 
-    public IActionResult Index()
+    private bool IsCurrentUser(int? Id)
     {
-      var tasks = _DbContext.Task.Where(t => t.UserId == _currentUserId);
-      ViewBag.DueToday = tasks.Where(t => t.DueAt.Date.Equals(DateTime.Today.Date)).Count();
-      ViewBag.Overdue = tasks.Where(t => !t.IsCompleted && DateTime.Now.Date > t.DueAt).Count();
-      ViewBag.Uncompleted = tasks.Where(t => !t.IsCompleted).Count();
-      ViewBag.Important = tasks.Where(t => !t.IsCompleted && t.IsImportant).Count();
-      ViewBag.Tasks = tasks.ToList();
+      return GetCurrentUser().Id == Id;
+    }
+
+    private async Task<User?> GetCurrentUser()
+    {
+      var httpContext = _httpContextAccerssor.HttpContext;
+      if (httpContext == null) return null;
+      return await _userManager.GetUserAsync(httpContext.User);
+    }
+
+    public async Task<IActionResult> Index()
+    {
+      var tasks = _DbContext.Task.Where(t => IsCurrentUser(t.UserId));
+      ViewBag.DueToday = await tasks.Where(t => t.DueAt.Date.Equals(DateTime.Today.Date)).CountAsync();
+      ViewBag.Overdue = await tasks.Where(t => !t.IsCompleted && DateTime.Now.Date > t.DueAt).CountAsync();
+      ViewBag.Uncompleted = await tasks.Where(t => !t.IsCompleted).CountAsync();
+      ViewBag.Important = tasks.Where(t => !t.IsCompleted && t.IsImportant).CountAsync();
+      ViewBag.Tasks = await tasks.ToListAsync();
       return View();
     }
 
-    public IActionResult Tasks()
+    public async Task<IActionResult> Tasks()
     {
-      var tasks = _DbContext.Task.Where(t => t.UserId == _currentUserId);
-      ViewBag.Important = tasks.Where(t => t.IsImportant).ToList();
-      ViewBag.Uncompleted = tasks.Where(t => !t.IsCompleted).ToList();
-      ViewBag.Completed = tasks.Where(t => t.IsCompleted).ToList();
+      var tasks = _DbContext.Task.Where(t => IsCurrentUser(t.UserId));
+      ViewBag.Important = await tasks.Where(t => t.IsImportant).ToListAsync();
+      ViewBag.Uncompleted = await tasks.Where(t => !t.IsCompleted).ToListAsync();
+      ViewBag.Completed = await tasks.Where(t => t.IsCompleted).ToListAsync();
       return View();
     }
 
-    public IActionResult ToggleTask(int Id, bool checkbox)
+    public async Task<IActionResult> ToggleTask(int Id, bool checkbox)
     {
-      var task = _DbContext.Task.Find(Id);
-      task.IsCompleted = checkbox;
-      _DbContext.Task.Update(task);
-      _DbContext.SaveChanges();
+      var task = await _DbContext.Task.FindAsync(Id);
+      if (task != null)
+      {
+        task.IsCompleted = checkbox;
+        _DbContext.Task.Update(task);
+        _DbContext.SaveChanges();
+      }
       return RedirectToAction("Tasks");
     }
 
-    public IActionResult ClaimTask(int Id, string Url)
+    public async Task<IActionResult> ClaimTask(int Id, string Url)
     {
       var groupId = Convert.ToInt32(Url.Split("=")[1]);
-      var task = _DbContext.Task.Find(Id);
-      if (task.UserId == _currentUserId)
+      var task = await _DbContext.Task.FindAsync(Id);
+      if (task != null)
       {
-        task.UserId = null;
+        if (IsCurrentUser(task.UserId))
+        {
+          task.UserId = null;
+        }
+        else if (task.UserId == null)
+        {
+          task.UserId = GetCurrentUser().Id;
+        }
+        //_DbContext.Task.Update(task);
+        await _DbContext.SaveChangesAsync();
       }
-      else if (task.UserId == null)
-      {
-        task.UserId = _currentUserId;
-      }
-      _DbContext.Task.Update(task);
-      _DbContext.SaveChanges();
       return RedirectToAction("Groups");
     }
 
-    public IActionResult Groups(int Id)
+    public async Task<IActionResult> Groups(int Id)
     {
       if (Id != 0)
       {
-        var tasks = _DbContext.Task.Where(t => t.GroupId == Id).ToList();
-        var memberships = _DbContext.GroupMemberships.Where(gm => gm.GroupId == Id).ToList();
+        var tasks = await _DbContext.Task.Where(t => t.GroupId == Id).ToListAsync();
+        var memberships = await _DbContext.GroupMemberships.Where(gm => gm.GroupId == Id).ToListAsync();
         var users = new List<User>();
         foreach (var m in memberships)
         {
-          var u = _DbContext.Users.Where(u => u.Id == m.UserId).SingleOrDefault();
+          var u = await _DbContext.Users.Where(u => u.Id == m.UserId).SingleOrDefaultAsync();
           if (u != null)
           {
             users.Add(u);
@@ -94,106 +104,115 @@ namespace Final_Project.Controllers
         ViewBag.Users = users;
         return PartialView("~/Views/Home/_Partials/_GroupPartial.cshtml");
       }
-      var gm = _DbContext.GroupMemberships.Where(gm => gm.UserId == _currentUserId);
-      var groupIds = gm.Select(gm => gm.GroupId).ToList();
+      var gm = _DbContext.GroupMemberships.Where(gm => IsCurrentUser(gm.UserId));
+      var groupIds = await gm.Select(gm => gm.GroupId).ToListAsync();
       var groups = new List<Group>();
       foreach (var gId in groupIds)
       {
-        groups.Add(_DbContext.Group.Where(g => g.Id == gId).SingleOrDefault());
+        var g = await _DbContext.Group.Where(g => g.Id == gId).SingleOrDefaultAsync();
+        if (g != null) groups.Add(g);
       }
       return View(groups);
     }
 
-    public IActionResult Profile()
+    public async Task<IActionResult> Profile()
     {
-      var user = _DbContext.Users.Find(_currentUserId);
-      if (user.Image != null)
+      var user = await GetCurrentUser();
+      if (user != null)
       {
-        var b64 = Convert.ToBase64String(user.Image);
-        ViewBag.Image = string.Format("data:image/png;base64," + b64);
-      }
-      ViewBag.ManagerEmail = _DbContext.Users.Where(m => m.Id == user.ManagerId).SingleOrDefault();
-      var pendingReq = _DbContext.ManagerRequests.Where(mr => mr.IsPending && mr.UserId == user.Id).SingleOrDefault();
-      if (pendingReq != null)
-      {
-        var manager = _DbContext.Users.Where(m => m.Id == pendingReq.ManagerId).SingleOrDefault();
-        ViewBag.PendingManagerEmail = manager.Email;
+        if (user.Image != null)
+        {
+          var b64 = Convert.ToBase64String(user.Image);
+          ViewBag.Image = string.Format("data:image/png;base64," + b64);
+        }
+        ViewBag.ManagerEmail = await _DbContext.Users.Where(m => m.Id == user.ManagerId).SingleOrDefaultAsync();
+        var pendingReq = await _DbContext.ManagerRequests.Where(mr => mr.IsPending && mr.UserId == user.Id).SingleOrDefaultAsync();
+        if (pendingReq != null)
+        {
+          var manager = await _DbContext.Users.Where(m => m.Id == pendingReq.ManagerId).SingleOrDefaultAsync();
+          if (manager != null) ViewBag.PendingManagerEmail = manager.Email;
+        }
       }
       return View(user);
     }
 
-    public IActionResult EditProfile()
+    public async Task<IActionResult> EditProfile()
     {
-      var user = _DbContext.Users.Find(_currentUserId);
-      ViewBag.DisplayName = user.DisplayName;
-      //ViewBag.Id = user.Id;
-      if (user.Image != null)
+      var user = await GetCurrentUser();
+      if (user != null)
       {
-        var b64 = Convert.ToBase64String(user.Image);
-        ViewBag.Image = string.Format("data:image/png;base64," + b64);
+        ViewBag.DisplayName = user.DisplayName;
+        //ViewBag.Id = user.Id;
+        if (user.Image != null)
+        {
+          var b64 = Convert.ToBase64String(user.Image);
+          ViewBag.Image = string.Format("data:image/png;base64," + b64);
+        }
+        ViewBag.ManagerEmail = await _DbContext.Users.Where(m => m.Id == user.ManagerId).SingleOrDefaultAsync();
       }
-      ViewBag.ManagerEmail = _DbContext.Users.Where(m => m.Id == user.ManagerId).SingleOrDefault();
       return View();
     }
 
-    public IActionResult UpdateProfile(ProfileEditModel pem)
+    public async Task<IActionResult> UpdateProfile(ProfileEditModel pem)
     {
-      var user = _DbContext.Users.Find(_currentUserId);
-
-      if (pem.Image != null)
+      var user = await GetCurrentUser();
+      if (user != null)
       {
-        using (var memoryStream = new MemoryStream())
+        if (pem.Image != null)
         {
-          pem.Image.CopyToAsync(memoryStream);
-
-          // Upload the file if less than 2 MB
-          if (memoryStream.Length < 2097152 && memoryStream.Length > 0 && (pem.Image.ContentType == "image/png" || pem.Image.ContentType == "image/jpeg"))
+          using (var memoryStream = new MemoryStream())
           {
-            user.Image = memoryStream.ToArray();
+            await pem.Image.CopyToAsync(memoryStream);
+
+            // Upload the file if less than 2 MB
+            if (memoryStream.Length < 2097152 && memoryStream.Length > 0 && (pem.Image.ContentType == "image/png" || pem.Image.ContentType == "image/jpeg"))
+            {
+              user.Image = memoryStream.ToArray();
+            }
           }
         }
-      }
-      user.DisplayName = pem.DisplayName;
-      if (pem.ManagerEmail != null)
-      {
-        var manager = _DbContext.Users.Where(m => m.NormalizedEmail == pem.ManagerEmail.Trim().ToUpper()).SingleOrDefault();
-        if (user.ManagerId != manager.Id)
+        user.DisplayName = pem.DisplayName;
+        if (pem.ManagerEmail != null)
         {
-          _DbContext.ManagerRequests.Add(new ManagerRequests
+          var manager = await _DbContext.Users.Where(m => m.NormalizedEmail == pem.ManagerEmail.Trim().ToUpper()).SingleOrDefaultAsync();
+          if (manager != null && user.ManagerId != manager.Id)
           {
-            UserId = user.Id,
-            ManagerId = manager.Id,
-            IsAccepted = false,
-            IsPending = true,
-            CreatedAt = DateTime.Now
-          });
+            await _DbContext.ManagerRequests.AddAsync(new ManagerRequests
+            {
+              UserId = user.Id,
+              ManagerId = manager.Id,
+              IsAccepted = false,
+              IsPending = true,
+            });
+          }
         }
+        //_DbContext.Users.Update(user);
+        await _DbContext.SaveChangesAsync();
       }
-      _DbContext.Users.Update(user);
-      _DbContext.SaveChanges();
       return RedirectToAction("Profile");
     }
 
     [Route("/Home/ChartData")]
-    public JsonResult ChartDate()
+    public async Task<JsonResult> ChartDate()
     {
       var labels = new List<string>();
       var data = new List<int>();
       labels.Add("You");
-      var gm = _DbContext.GroupMemberships.Where(gm => gm.UserId == _currentUserId).ToList();
+      var gm = await _DbContext.GroupMemberships.Where(gm => IsCurrentUser(gm.UserId)).ToListAsync();
       var groups = new List<Group>();
       foreach (var g in gm)
       {
-        groups.Add(_DbContext.Group.Find(g.GroupId));
+        var grp = await _DbContext.Group.FindAsync(g.GroupId);
+        if (grp != null) groups.Add(grp);
       }
       foreach (var g in groups)
       {
-        labels.Add(g.Name);
+        if (g.Name != null) labels.Add(g.Name);
       }
-      data.Add(_DbContext.Task.Where(t => t.UserId == _currentUserId).Count());
+      data.Add(await _DbContext.Task.Where(t => IsCurrentUser(t.UserId)).CountAsync());
       foreach (var g in groups)
       {
-        data.Add(_DbContext.Task.Where(t => t.GroupId == g.Id).Count());
+        data.Add(await _DbContext.Task.Where(t => t.GroupId == g.Id).CountAsync());
       }
       return new JsonResult(new { labels, data });
     }
