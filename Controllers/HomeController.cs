@@ -13,17 +13,13 @@ namespace Final_Project.Controllers
     private readonly ApplicationDbContext _DbContext;
     private readonly IHttpContextAccessor _httpContextAccerssor;
     private readonly UserManager<User> _userManager;
+    private readonly User? currentUser;
 
     public HomeController(ApplicationDbContext DbContext, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
     {
       _DbContext = DbContext;
       _httpContextAccerssor = httpContextAccessor;
       _userManager = userManager;
-    }
-
-    private bool IsCurrentUser(int? Id)
-    {
-      return GetCurrentUser().Id == Id;
     }
 
     private async Task<User?> GetCurrentUser()
@@ -35,21 +31,29 @@ namespace Final_Project.Controllers
 
     public async Task<IActionResult> Index()
     {
-      var tasks = _DbContext.Task.Where(t => IsCurrentUser(t.UserId));
-      ViewBag.DueToday = await tasks.Where(t => t.DueAt.Date.Equals(DateTime.Today.Date)).CountAsync();
-      ViewBag.Overdue = await tasks.Where(t => !t.IsCompleted && DateTime.Now.Date > t.DueAt).CountAsync();
-      ViewBag.Uncompleted = await tasks.Where(t => !t.IsCompleted).CountAsync();
-      ViewBag.Important = tasks.Where(t => !t.IsCompleted && t.IsImportant).CountAsync();
-      ViewBag.Tasks = await tasks.ToListAsync();
+      var currentUser = await GetCurrentUser();
+      if (currentUser != null)
+      {
+        var tasks = _DbContext.Task.Where(t => t.UserId == currentUser.Id);
+        ViewBag.DueToday = await tasks.Where(t => t.DueAt.Date.Equals(DateTime.Today.Date)).CountAsync();
+        ViewBag.Overdue = await tasks.Where(t => !t.IsCompleted && DateTime.Now.Date > t.DueAt).CountAsync();
+        ViewBag.Uncompleted = await tasks.Where(t => !t.IsCompleted).CountAsync();
+        ViewBag.Important = tasks.Where(t => !t.IsCompleted && t.IsImportant).CountAsync();
+        ViewBag.Tasks = await tasks.ToListAsync();
+      }
       return View();
     }
 
     public async Task<IActionResult> Tasks()
     {
-      var tasks = _DbContext.Task.Where(t => IsCurrentUser(t.UserId));
-      ViewBag.Important = await tasks.Where(t => t.IsImportant).ToListAsync();
-      ViewBag.Uncompleted = await tasks.Where(t => !t.IsCompleted).ToListAsync();
-      ViewBag.Completed = await tasks.Where(t => t.IsCompleted).ToListAsync();
+      var currentUser = await GetCurrentUser();
+      if (currentUser != null)
+      {
+        var tasks = _DbContext.Task.Where(t => t.AssignerId == currentUser.Id);
+        ViewBag.Important = await tasks.Where(t => t.IsImportant).ToListAsync();
+        ViewBag.Uncompleted = await tasks.Where(t => !t.IsCompleted).ToListAsync();
+        ViewBag.Completed = await tasks.Where(t => t.IsCompleted).ToListAsync();
+      }
       return View();
     }
 
@@ -69,15 +73,16 @@ namespace Final_Project.Controllers
     {
       var groupId = Convert.ToInt32(Url.Split("=")[1]);
       var task = await _DbContext.Task.FindAsync(Id);
-      if (task != null)
+      var currentUser = await GetCurrentUser();
+      if (task != null && currentUser != null)
       {
-        if (IsCurrentUser(task.UserId))
+        if (task.UserId == currentUser.Id)
         {
           task.UserId = null;
         }
         else if (task.UserId == null)
         {
-          task.UserId = GetCurrentUser().Id;
+          task.UserId = currentUser.Id;
         }
         //_DbContext.Task.Update(task);
         await _DbContext.SaveChangesAsync();
@@ -104,13 +109,17 @@ namespace Final_Project.Controllers
         ViewBag.Users = users;
         return PartialView("~/Views/Home/_Partials/_GroupPartial.cshtml");
       }
-      var gm = _DbContext.GroupMemberships.Where(gm => IsCurrentUser(gm.UserId));
-      var groupIds = await gm.Select(gm => gm.GroupId).ToListAsync();
+      var currentUser = await GetCurrentUser();
       var groups = new List<Group>();
-      foreach (var gId in groupIds)
+      if (currentUser != null)
       {
-        var g = await _DbContext.Group.Where(g => g.Id == gId).SingleOrDefaultAsync();
-        if (g != null) groups.Add(g);
+        var gm = _DbContext.GroupMemberships.Where(gm => gm.UserId == currentUser.Id);
+        var groupIds = await gm.Select(gm => gm.GroupId).ToListAsync();
+        foreach (var gId in groupIds)
+        {
+          var g = await _DbContext.Group.Where(g => g.Id == gId).SingleOrDefaultAsync();
+          if (g != null) groups.Add(g);
+        }
       }
       return View(groups);
     }
@@ -197,22 +206,26 @@ namespace Final_Project.Controllers
     {
       var labels = new List<string>();
       var data = new List<int>();
-      labels.Add("You");
-      var gm = await _DbContext.GroupMemberships.Where(gm => IsCurrentUser(gm.UserId)).ToListAsync();
-      var groups = new List<Group>();
-      foreach (var g in gm)
+      var currentUser = await GetCurrentUser();
+      if (currentUser != null)
       {
-        var grp = await _DbContext.Group.FindAsync(g.GroupId);
-        if (grp != null) groups.Add(grp);
-      }
-      foreach (var g in groups)
-      {
-        if (g.Name != null) labels.Add(g.Name);
-      }
-      data.Add(await _DbContext.Task.Where(t => IsCurrentUser(t.UserId)).CountAsync());
-      foreach (var g in groups)
-      {
-        data.Add(await _DbContext.Task.Where(t => t.GroupId == g.Id).CountAsync());
+        labels.Add("You");
+        var gm = await _DbContext.GroupMemberships.Where(gm => gm.UserId == currentUser.Id).ToListAsync();
+        var groups = new List<Group>();
+        foreach (var g in gm)
+        {
+          var grp = await _DbContext.Group.FindAsync(g.GroupId);
+          if (grp != null) groups.Add(grp);
+        }
+        foreach (var g in groups)
+        {
+          if (g.Name != null) labels.Add(g.Name);
+        }
+        data.Add(await _DbContext.Task.Where(t => t.UserId == currentUser.Id).CountAsync());
+        foreach (var g in groups)
+        {
+          data.Add(await _DbContext.Task.Where(t => t.GroupId == g.Id).CountAsync());
+        }
       }
       return new JsonResult(new { labels, data });
     }
